@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import ru.photoBolter.view.SourceDirectoryChooser;
 
 import java.io.File;
 
@@ -31,20 +32,6 @@ public class App extends Application {
     }
 
     public void start(final Stage primaryStage) {
-        primaryStage.setTitle("Tree View Sample");
-
-        final DirectoryChooser directoryChooser = new DirectoryChooser();
-
-        final Button openButton = new Button("Open a Picture...");
-
-
-        openButton.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(final ActionEvent e) {
-                        directoryChooser.showDialog(primaryStage);
-                    }
-                });
 
 
 
@@ -57,7 +44,10 @@ public class App extends Application {
         TreeView<String> tree = new TreeView<>(rootItem);
         StackPane root = new StackPane();
         root.getChildren().add(tree);
-        root.getChildren().add(openButton);
+        root.getChildren().add(
+                new SourceDirectoryChooser(new File("/"))
+                .getOpenButton()
+        );
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
     }
