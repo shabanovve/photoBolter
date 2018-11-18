@@ -22,7 +22,7 @@ public abstract class AbstractDirectoryChooser {
         directoryChooser.setInitialDirectory(getInitialDirectory());
     }
 
-    public Button getOpenButton() {
+    public Button getView() {
         return openButton;
     }
 

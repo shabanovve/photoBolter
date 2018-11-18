@@ -2,7 +2,6 @@ package ru.photoBolter;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.photoBolter.view.FileTreeView;
@@ -18,10 +17,13 @@ public class App extends Application {
 
     public void start(final Stage primaryStage) {
         VBox root = new VBox();
+        SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser(new File("/"));
+        sourceDirectoryChooser.setStage(primaryStage);
         root.getChildren().add(
-                new SourceDirectoryChooser(new File("/"))
-                        .getOpenButton()
+                sourceDirectoryChooser
+                        .getView()
         );
+
         root.getChildren().add(
                 new FileTreeView()
                         .getView()
