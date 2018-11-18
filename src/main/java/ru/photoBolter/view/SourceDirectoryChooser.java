@@ -33,7 +33,8 @@ public class SourceDirectoryChooser extends AbstractDirectoryChooser {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                directoryChooser.showDialog(stage);
+                File directory = directoryChooser.showDialog(stage);
+                changeSoureDirectoryObserver.changeDirectory(directory.toPath());
             }
         };
     }
