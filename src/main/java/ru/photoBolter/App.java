@@ -3,6 +3,7 @@ package ru.photoBolter;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.photoBolter.view.FileTreeView;
 import ru.photoBolter.view.SourceDirectoryChooser;
@@ -16,14 +17,14 @@ public class App extends Application {
     }
 
     public void start(final Stage primaryStage) {
-        StackPane root = new StackPane();
+        VBox root = new VBox();
+        root.getChildren().add(
+                new SourceDirectoryChooser(new File("/"))
+                        .getOpenButton()
+        );
         root.getChildren().add(
                 new FileTreeView()
                         .getView()
-        );
-        root.getChildren().add(
-                new SourceDirectoryChooser(new File("/"))
-                .getOpenButton()
         );
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
