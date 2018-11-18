@@ -1,19 +1,17 @@
 package ru.photoBolter.controller;
 
-import ru.photoBolter.model.Model;
-
 import java.nio.file.Path;
 
-public class ChangeSoureDirectoryObserver implements ChangeDirectoryObserver {
+public class ChangeSoureDirectoryObserver extends AbstractChangeDirectoryObserver {
 
-    private final Model model;
+    private final ChangeSourceDirectoryObservable changeSourceDirectoryObservable;
 
-    public ChangeSoureDirectoryObserver(Model model) {
-        this.model = model;
+    public ChangeSoureDirectoryObserver(ChangeSourceDirectoryObservable changeSourceDirectoryObservable) {
+        this.changeSourceDirectoryObservable = changeSourceDirectoryObservable;
     }
 
     @Override
     public void changeDirectory(Path path) {
-        model.setSourceDirectory(path);
+        changeSourceDirectoryObservable.changeSourceDirectory(path);
     }
 }

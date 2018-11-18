@@ -25,13 +25,15 @@ public class App extends Application {
         sourceDirectoryChooser.setStage(primaryStage);
         sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(model));
         root.getChildren().add(
-                sourceDirectoryChooser
-                        .getView()
+                sourceDirectoryChooser.getView()
         );
 
+        FileTreeView fileTreeView = new FileTreeView();
+        model.setChangeSoureDirectoryObserver(
+                new ChangeSoureDirectoryObserver(fileTreeView)
+        );
         root.getChildren().add(
-                new FileTreeView()
-                        .getView()
+                fileTreeView.getView()
         );
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
