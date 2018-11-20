@@ -49,9 +49,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable {
             Files.list(path).forEach(filePath -> {
                 TreeItem<String> item = new TreeItem(
                         filePath.getName(filePath.getNameCount() - 1),
-                        new ImageView(
-                                new Image(getClass().getResourceAsStream("../../../file.png"))
-                        )
+                        getIcon(filePath)
                 );
                 rootItem.getChildren().add(item);
             });
@@ -60,5 +58,19 @@ public class FileTreeView implements ChangeSourceDirectoryObservable {
         }
         tree.setRoot(rootItem);
         tree.refresh();
+    }
+
+    private ImageView getIcon(Path filePath) {
+        ImageView imageView = null;
+        if (Files.isDirectory(filePath)) {
+            imageView = new ImageView(
+                    new Image(getClass().getResourceAsStream("../../../folder.png"))
+            );
+        } else {
+            imageView = new ImageView(
+                    new Image(getClass().getResourceAsStream("../../../file.png"))
+            );
+        }
+        return imageView;
     }
 }
