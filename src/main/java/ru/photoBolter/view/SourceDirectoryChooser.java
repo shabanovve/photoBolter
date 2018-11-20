@@ -3,15 +3,17 @@ package ru.photoBolter.view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
 
 import java.io.File;
+import java.nio.file.Path;
 
-public class SourceDirectoryChooser extends AbstractDirectoryChooser {
+public class SourceDirectoryChooser extends AbstractDirectoryChooser implements ChangeSourceDirectoryObservable {
 
     private File initialDirectory;
     private Stage stage;
 
-    public SourceDirectoryChooser(File initialDirectory) {
+    public void setInitialDirectory(File initialDirectory) {
         this.initialDirectory = initialDirectory;
     }
 
@@ -37,5 +39,10 @@ public class SourceDirectoryChooser extends AbstractDirectoryChooser {
                 changeSoureDirectoryObserver.changeDirectory(directory.toPath());
             }
         };
+    }
+
+    @Override
+    public void changeSourceDirectory(Path path) {
+        setInitialDirectory(path.toFile());
     }
 }

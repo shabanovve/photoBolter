@@ -10,15 +10,12 @@ import ru.photoBolter.model.ModelInitializer;
 import ru.photoBolter.view.FileTreeView;
 import ru.photoBolter.view.SourceDirectoryChooser;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class App extends Application {
 
     private Model model = new Model();
-
-    {
-        ModelInitializer.init(model);
-    }
 
     public static void main(String[] args) {
         launch(args);
@@ -26,20 +23,26 @@ public class App extends Application {
 
     public void start(final Stage primaryStage) {
         VBox root = new VBox();
-        SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser(new File("/"));
+        SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
         sourceDirectoryChooser.setStage(primaryStage);
-        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(model));
+        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(Arrays.asList(model)));
         root.getChildren().add(
                 sourceDirectoryChooser.getView()
         );
 
         FileTreeView fileTreeView = new FileTreeView();
+        ArrayList observed = new ArrayList();
+        observed.add(fileTreeView);
+        observed.add(sourceDirectoryChooser);
         model.setChangeSoureDirectoryObserver(
-                new ChangeSoureDirectoryObserver(fileTreeView)
+                new ChangeSoureDirectoryObserver(observed)
         );
         root.getChildren().add(
                 fileTreeView.getView()
         );
+
+        ModelInitializer.init(model);
+
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
     }

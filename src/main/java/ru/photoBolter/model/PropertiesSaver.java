@@ -6,14 +6,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Properties;
 
 import static ru.photoBolter.Constants.FILE_NAME;
-import static ru.photoBolter.Constants.SOURCE_DIRECTORY;
 
 public class PropertiesSaver {
-
-    private final Model model;
 
     private OutputStream outputStream;
 
@@ -35,12 +33,13 @@ public class PropertiesSaver {
 
     private Properties prop = new Properties();
 
-    public PropertiesSaver(Model model) {
-        this.model = model;
-    }
-
-    public void save() {
-        prop.setProperty(SOURCE_DIRECTORY, model.getSourceDirectory().toString());
+    public void save(Map<String,String> params) {
+        params.entrySet().stream().forEach(entry -> {
+            prop.setProperty(
+                    entry.getKey(),
+                    entry.getValue()
+            );
+        });
 
         try {
             prop.store(outputStream, null);
