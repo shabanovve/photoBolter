@@ -6,6 +6,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 import ru.photoBolter.model.Model;
+import ru.photoBolter.model.ModelInitializer;
 import ru.photoBolter.view.FileTreeView;
 import ru.photoBolter.view.SourceDirectoryChooser;
 
@@ -14,6 +15,10 @@ import java.io.File;
 public class App extends Application {
 
     private Model model = new Model();
+
+    {
+        ModelInitializer.init(model);
+    }
 
     public static void main(String[] args) {
         launch(args);
