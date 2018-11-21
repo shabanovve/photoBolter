@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
@@ -31,6 +32,7 @@ public class App extends Application {
         );
 
         FileTreeView fileTreeView = new FileTreeView();
+        fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
         ArrayList observed = new ArrayList();
         observed.add(fileTreeView);
         observed.add(sourceDirectoryChooser);

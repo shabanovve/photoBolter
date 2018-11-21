@@ -1,5 +1,6 @@
 package ru.photoBolter.model;
 
+import ru.photoBolter.controller.ChangeCurrentFileObservable;
 import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 
@@ -9,9 +10,11 @@ import java.util.Map;
 
 import static ru.photoBolter.Constants.SOURCE_DIRECTORY;
 
-public class Model implements ChangeSourceDirectoryObservable {
+public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFileObservable
+{
 
     private Path sourceDirectory;
+    private Path currentFile;
 
     private PropertiesSaver propertiesSaver;
 
@@ -42,5 +45,10 @@ public class Model implements ChangeSourceDirectoryObservable {
             params.put(SOURCE_DIRECTORY, path.toString());
             propertiesSaver.save(params);
         }
+    }
+
+    @Override
+    public void changeCurrentFile(Path currentFile) {
+        this.currentFile = currentFile;
     }
 }

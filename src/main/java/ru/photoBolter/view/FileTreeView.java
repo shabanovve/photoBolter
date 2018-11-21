@@ -7,6 +7,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
 import ru.photoBolter.model.PathContainer;
 
@@ -22,19 +23,24 @@ public class FileTreeView implements ChangeSourceDirectoryObservable {
     );
 
     private TreeView<PathContainer> tree;
+    private ChangeCurrentFileObserver changeCurrentFileObserver;
 
     public FileTreeView() {
         tree = new TreeView();
         tree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<PathContainer>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<PathContainer>> observable, TreeItem<PathContainer> oldValue, TreeItem<PathContainer> newValue) {
-                logger.info(newValue.getValue().toString());
+                changeCurrentFileObserver.changeCurrentFile(newValue.getValue().getPath());
             }
         });
     }
 
     public Node getView() {
         return tree;
+    }
+
+    public void setChangeCurrentFileObserver(ChangeCurrentFileObserver changeCurrentFileObserver) {
+        this.changeCurrentFileObserver = changeCurrentFileObserver;
     }
 
     @Override
