@@ -9,6 +9,7 @@ import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
 import ru.photoBolter.view.FileTreeView;
+import ru.photoBolter.view.PhotoView;
 import ru.photoBolter.view.SourceDirectoryChooser;
 
 import java.util.ArrayList;
@@ -41,6 +42,14 @@ public class App extends Application {
         );
         root.getChildren().add(
                 fileTreeView.getView()
+        );
+
+        PhotoView photoView = new PhotoView();
+        model.setChangeCurrentFileObserver(
+                new ChangeCurrentFileObserver(photoView)
+        );
+        root.getChildren().add(
+                photoView.getView()
         );
 
         ModelInitializer.init(model);
