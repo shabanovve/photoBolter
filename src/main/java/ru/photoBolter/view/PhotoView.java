@@ -20,6 +20,15 @@ public class PhotoView implements ChangeCurrentFileObservable {
 
     public void refresh() {
         Image image = new Image(pathToFile.toFile().toURI().toString());
+        imageView.setPreserveRatio(true);
+        if (image.getHeight() > image.getWidth()) {
+            imageView.setFitWidth(800);
+            imageView.setFitHeight(0);
+        } else {
+            imageView.setFitWidth(0);
+            imageView.setFitHeight(800);
+        }
+
         imageView.setImage(image);
     }
 
