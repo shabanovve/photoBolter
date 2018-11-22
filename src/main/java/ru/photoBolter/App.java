@@ -1,9 +1,11 @@
 package ru.photoBolter;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
@@ -61,8 +63,23 @@ public class App extends Application {
 
         root.getChildren().add(leftPanel);
         root.getChildren().add(rightPanel);
-        primaryStage.setScene(new Scene(root, 300, 250));
+
+
+        primaryStage.setScene(new Scene(root));
+
+        makeMaximizedWindow(primaryStage);
+
         primaryStage.show();
+    }
+
+    private void makeMaximizedWindow(Stage primaryStage) {
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
     }
 
 }
