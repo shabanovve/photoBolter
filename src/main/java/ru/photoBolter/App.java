@@ -2,6 +2,7 @@ package ru.photoBolter;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
@@ -24,11 +25,15 @@ public class App extends Application {
     }
 
     public void start(final Stage primaryStage) {
-        VBox root = new VBox();
+        HBox root = new HBox();
+
+        VBox leftPanel = new VBox();
+        VBox rightPanel = new VBox();
+
         SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
         sourceDirectoryChooser.setStage(primaryStage);
         sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(Arrays.asList(model)));
-        root.getChildren().add(
+        leftPanel.getChildren().add(
                 sourceDirectoryChooser.getView()
         );
 
@@ -40,7 +45,7 @@ public class App extends Application {
         model.setChangeSoureDirectoryObserver(
                 new ChangeSoureDirectoryObserver(observed)
         );
-        root.getChildren().add(
+        leftPanel.getChildren().add(
                 fileTreeView.getView()
         );
 
@@ -48,12 +53,14 @@ public class App extends Application {
         model.setChangeCurrentFileObserver(
                 new ChangeCurrentFileObserver(photoView)
         );
-        root.getChildren().add(
+        rightPanel.getChildren().add(
                 photoView.getView()
         );
 
         ModelInitializer.init(model);
 
+        root.getChildren().add(leftPanel);
+        root.getChildren().add(rightPanel);
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
     }
