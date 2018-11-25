@@ -36,7 +36,9 @@ public class SourceDirectoryChooser extends AbstractDirectoryChooser implements 
             @Override
             public void handle(ActionEvent event) {
                 File directory = directoryChooser.showDialog(stage);
-                changeSoureDirectoryObserver.changeDirectory(directory.toPath());
+                if (directory != null) {
+                    changeSoureDirectoryObserver.changeDirectory(directory.toPath());
+                }
             }
         };
     }
