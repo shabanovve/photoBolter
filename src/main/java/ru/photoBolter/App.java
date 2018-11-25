@@ -27,6 +27,8 @@ public class App extends Application {
     }
 
     public void start(final Stage primaryStage) {
+        ModelInitializer.init(model);
+
         HBox root = new HBox();
 
         VBox leftPanel = new VBox();
@@ -58,8 +60,6 @@ public class App extends Application {
         rightPanel.getChildren().add(
                 photoView.getView()
         );
-
-        ModelInitializer.init(model);
 
         root.getChildren().add(leftPanel);
         root.getChildren().add(rightPanel);

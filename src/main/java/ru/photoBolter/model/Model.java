@@ -31,6 +31,10 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         this.changeCurrentFileObserver = changeCurrentFileObserver;
     }
 
+    public void setSourceDirectory(Path sourceDirectory) {
+        this.sourceDirectory = sourceDirectory;
+    }
+
     private ChangeSoureDirectoryObserver changeSoureDirectoryObserver;
 
     public Path getSourceDirectory() {
@@ -39,6 +43,9 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 
     @Override
     public void changeSourceDirectory(Path path) {
+        if (path.equals(this.sourceDirectory)) {
+            return;
+        }
         this.sourceDirectory = path;
         changeSoureDirectoryObserver.changeDirectory(this.sourceDirectory);
         if (propertiesSaver != null) {
@@ -59,5 +66,9 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     private boolean checkJpgFile(Path currentFile) {
         String stringFileName = currentFile.getName(currentFile.getNameCount() - 1).toString();
         return stringFileName.toLowerCase().contains(".jpg");
+    }
+
+    public void setCurrentFile(Path currentFile) {
+        this.currentFile = currentFile;
     }
 }
