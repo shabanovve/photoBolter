@@ -1,17 +1,15 @@
 package ru.photoBolter.model;
 
-import ru.photoBolter.controller.ChangeCurrentFileObservable;
-import ru.photoBolter.controller.ChangeCurrentFileObserver;
-import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
-import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
+import ru.photoBolter.controller.*;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ru.photoBolter.Constants.DESTINATION_DIRECTORY;
 import static ru.photoBolter.Constants.SOURCE_DIRECTORY;
 
-public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFileObservable
+public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFileObservable, ChangeDestinationDirectoryObservable
 {
 
     private Path sourceDirectory;
@@ -19,6 +17,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     private Path currentFile;
     private ChangeCurrentFileObserver changeCurrentFileObserver;
     private PropertiesSaver propertiesSaver;
+    private ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver;
 
     public void setPropertiesSaver(PropertiesSaver propertiesSaver) {
         this.propertiesSaver = propertiesSaver;
@@ -26,6 +25,10 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 
     public void setChangeSoureDirectoryObserver(ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {
         this.changeSoureDirectoryObserver = changeSoureDirectoryObserver;
+    }
+
+    public void setChangeDestinatonDirectoryObserver(ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver) {
+        this.changeDestinatonDirectoryObserver = changeDestinatonDirectoryObserver;
     }
 
     public void setChangeCurrentFileObserver(ChangeCurrentFileObserver changeCurrentFileObserver) {
@@ -79,5 +82,20 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 
     public void setCurrentFile(Path currentFile) {
         this.currentFile = currentFile;
+    }
+
+    @Override
+    public void changeDestinationDirectory(Path path) {
+        if (path.equals(this.destinationDirectory)) {
+            return;
+        }
+        this.destinationDirectory = path;
+        changeDestinatonDirectoryObserver.changeDirectory(this.destinationDirectory);
+        if (propertiesSaver != null) {
+            Map<String, String> params = new HashMap<>();
+            params.put(DESTINATION_DIRECTORY, path.toString());
+            propertiesSaver.save(params);
+        }
+
     }
 }

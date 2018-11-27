@@ -42,14 +42,19 @@ public class App extends Application {
         );
 
         DestinationDirectoryChooser destinationDirectoryChooser = createDestinationDirectoryChooser(primaryStage);
+        model.setChangeDestinatonDirectoryObserver(
+                new ChangeDestinationDirectoryObserver(Arrays.asList(destinationDirectoryChooser))
+        );
         leftPanel.getChildren().add(
                 destinationDirectoryChooser.getView()
         );
 
-        ArrayList observed = new ArrayList();
-        FileTreeView fileTreeView = initFileTreeView(sourceDirectoryChooser, observed);
+        FileTreeView fileTreeView = new FileTreeView();
+        fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
+        fileTreeView.init(model.getSourceDirectory());
+
         model.setChangeSoureDirectoryObserver(
-                new ChangeSoureDirectoryObserver(observed)
+                new ChangeSoureDirectoryObserver(Arrays.asList(fileTreeView, sourceDirectoryChooser))
         );
         leftPanel.getChildren().add(
                 fileTreeView.getView()
@@ -80,15 +85,6 @@ public class App extends Application {
         destinationDirectoryChooser.setObserver(new ChangeDestinationDirectoryObserver(Arrays.asList(model)));
         destinationDirectoryChooser.setInitialDirectory(model.getDestinationDirectory().toFile());
         return destinationDirectoryChooser;
-    }
-
-    private FileTreeView initFileTreeView(SourceDirectoryChooser sourceDirectoryChooser, ArrayList observed) {
-        FileTreeView fileTreeView = new FileTreeView();
-        fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
-        fileTreeView.init(model.getSourceDirectory());
-        observed.add(fileTreeView);
-        observed.add(sourceDirectoryChooser);
-        return fileTreeView;
     }
 
     private SourceDirectoryChooser createSourceDirectoryChooser(Stage primaryStage) {
