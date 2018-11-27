@@ -15,6 +15,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 {
 
     private Path sourceDirectory;
+    private Path destinationDirectory;
     private Path currentFile;
     private ChangeCurrentFileObserver changeCurrentFileObserver;
     private PropertiesSaver propertiesSaver;
@@ -35,10 +36,18 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         this.sourceDirectory = sourceDirectory;
     }
 
+    public void setDestinationDirectory(Path destinationDirectory) {
+        this.destinationDirectory = destinationDirectory;
+    }
+
     private ChangeSoureDirectoryObserver changeSoureDirectoryObserver;
 
     public Path getSourceDirectory() {
         return this.sourceDirectory;
+    }
+
+    public Path getDestinationDirectory() {
+        return destinationDirectory;
     }
 
     @Override

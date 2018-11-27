@@ -8,9 +8,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
+import ru.photoBolter.controller.ChangeDestinationDirectoryObserver;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
+import ru.photoBolter.view.DestinationDirectoryChooser;
 import ru.photoBolter.view.FileTreeView;
 import ru.photoBolter.view.PhotoView;
 import ru.photoBolter.view.SourceDirectoryChooser;
@@ -34,20 +36,18 @@ public class App extends Application {
         VBox leftPanel = new VBox();
         VBox rightPanel = new VBox();
 
-        SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
-        sourceDirectoryChooser.setStage(primaryStage);
-        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(Arrays.asList(model)));
-        sourceDirectoryChooser.setInitialDirectory(model.getSourceDirectory().toFile());
+        SourceDirectoryChooser sourceDirectoryChooser = createSourceDirectoryChooser(primaryStage);
         leftPanel.getChildren().add(
                 sourceDirectoryChooser.getView()
         );
 
-        FileTreeView fileTreeView = new FileTreeView();
-        fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
-        fileTreeView.init(model.getSourceDirectory());
+        DestinationDirectoryChooser destinationDirectoryChooser = createDestinationDirectoryChooser(primaryStage);
+        leftPanel.getChildren().add(
+                destinationDirectoryChooser.getView()
+        );
+
         ArrayList observed = new ArrayList();
-        observed.add(fileTreeView);
-        observed.add(sourceDirectoryChooser);
+        FileTreeView fileTreeView = initFileTreeView(sourceDirectoryChooser, observed);
         model.setChangeSoureDirectoryObserver(
                 new ChangeSoureDirectoryObserver(observed)
         );
@@ -72,6 +72,31 @@ public class App extends Application {
         makeMaximizedWindow(primaryStage);
 
         primaryStage.show();
+    }
+
+    private DestinationDirectoryChooser createDestinationDirectoryChooser(Stage primaryStage) {
+        DestinationDirectoryChooser destinationDirectoryChooser = new DestinationDirectoryChooser();
+        destinationDirectoryChooser.setStage(primaryStage);
+        destinationDirectoryChooser.setObserver(new ChangeDestinationDirectoryObserver(Arrays.asList(model)));
+        destinationDirectoryChooser.setInitialDirectory(model.getDestinationDirectory().toFile());
+        return destinationDirectoryChooser;
+    }
+
+    private FileTreeView initFileTreeView(SourceDirectoryChooser sourceDirectoryChooser, ArrayList observed) {
+        FileTreeView fileTreeView = new FileTreeView();
+        fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
+        fileTreeView.init(model.getSourceDirectory());
+        observed.add(fileTreeView);
+        observed.add(sourceDirectoryChooser);
+        return fileTreeView;
+    }
+
+    private SourceDirectoryChooser createSourceDirectoryChooser(Stage primaryStage) {
+        SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
+        sourceDirectoryChooser.setStage(primaryStage);
+        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(Arrays.asList(model)));
+        sourceDirectoryChooser.setInitialDirectory(model.getSourceDirectory().toFile());
+        return sourceDirectoryChooser;
     }
 
     private void makeMaximizedWindow(Stage primaryStage) {

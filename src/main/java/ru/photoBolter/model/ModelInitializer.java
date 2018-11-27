@@ -19,5 +19,9 @@ public class ModelInitializer {
         if (model.getSourceDirectory() == null) {
             model.setSourceDirectory(Paths.get(System.getProperty("user.dir")));
         }
+
+        if (model.getDestinationDirectory() == null) {
+            model.setDestinationDirectory(Paths.get(System.getProperty("user.dir")));
+        }
     }
 }
