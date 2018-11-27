@@ -37,6 +37,7 @@ public class App extends Application {
         SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
         sourceDirectoryChooser.setStage(primaryStage);
         sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(Arrays.asList(model)));
+        sourceDirectoryChooser.setInitialDirectory(model.getSourceDirectory().toFile());
         leftPanel.getChildren().add(
                 sourceDirectoryChooser.getView()
         );
