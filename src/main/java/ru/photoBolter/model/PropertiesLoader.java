@@ -27,7 +27,7 @@ public class PropertiesLoader {
 
     private void fillModel(Model model, Properties appProps) {
         if (appProps.getProperty(SOURCE_DIRECTORY) != null) {
-            model.changeSourceDirectory(
+            model.setSourceDirectory(
                     Paths.get(appProps.getProperty(SOURCE_DIRECTORY))
             );
         }
