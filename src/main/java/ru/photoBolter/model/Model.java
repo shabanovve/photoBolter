@@ -61,9 +61,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         this.sourceDirectory = path;
         changeSoureDirectoryObserver.changeDirectory(this.sourceDirectory);
         if (propertiesSaver != null) {
-            Map<String, String> params = new HashMap<>();
-            params.put(SOURCE_DIRECTORY, path.toString());
-            propertiesSaver.save(params);
+            propertiesSaver.save(this);
         }
     }
 
@@ -92,9 +90,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         this.destinationDirectory = path;
         changeDestinatonDirectoryObserver.changeDirectory(this.destinationDirectory);
         if (propertiesSaver != null) {
-            Map<String, String> params = new HashMap<>();
-            params.put(DESTINATION_DIRECTORY, path.toString());
-            propertiesSaver.save(params);
+            propertiesSaver.save(this);
         }
 
     }
