@@ -45,6 +45,10 @@ public class FileTreeView implements ChangeSourceDirectoryObservable {
 
     @Override
     public void changeSourceDirectory(Path path) {
+        init(path);
+    }
+
+    public void init(Path path) {
         TreeItem<PathContainer> rootItem = new TreeItem(
                 path.getName(path.getNameCount() - 1),
                 folderIcon

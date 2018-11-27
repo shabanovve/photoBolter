@@ -44,6 +44,7 @@ public class App extends Application {
 
         FileTreeView fileTreeView = new FileTreeView();
         fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
+        fileTreeView.init(model.getSourceDirectory());
         ArrayList observed = new ArrayList();
         observed.add(fileTreeView);
         observed.add(sourceDirectoryChooser);
