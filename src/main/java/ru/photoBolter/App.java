@@ -17,7 +17,6 @@ import ru.photoBolter.view.FileTreeView;
 import ru.photoBolter.view.PhotoView;
 import ru.photoBolter.view.SourceDirectoryChooser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class App extends Application {
@@ -33,8 +32,32 @@ public class App extends Application {
 
         HBox root = new HBox();
 
-        VBox leftPanel = new VBox();
+        root.getChildren().add(createLeftPanel(primaryStage));
+        root.getChildren().add(createRightPanel());
+
+
+        primaryStage.setScene(new Scene(root));
+
+        makeMaximizedWindow(primaryStage);
+
+        primaryStage.show();
+    }
+
+    private VBox createRightPanel() {
         VBox rightPanel = new VBox();
+
+        PhotoView photoView = new PhotoView();
+        model.setChangeCurrentFileObserver(
+                new ChangeCurrentFileObserver(photoView)
+        );
+        rightPanel.getChildren().add(
+                photoView.getView()
+        );
+        return rightPanel;
+    }
+
+    private VBox createLeftPanel(Stage primaryStage) {
+        VBox leftPanel = new VBox();
 
         SourceDirectoryChooser sourceDirectoryChooser = createSourceDirectoryChooser(primaryStage);
         leftPanel.getChildren().add(
@@ -59,24 +82,7 @@ public class App extends Application {
         leftPanel.getChildren().add(
                 fileTreeView.getView()
         );
-
-        PhotoView photoView = new PhotoView();
-        model.setChangeCurrentFileObserver(
-                new ChangeCurrentFileObserver(photoView)
-        );
-        rightPanel.getChildren().add(
-                photoView.getView()
-        );
-
-        root.getChildren().add(leftPanel);
-        root.getChildren().add(rightPanel);
-
-
-        primaryStage.setScene(new Scene(root));
-
-        makeMaximizedWindow(primaryStage);
-
-        primaryStage.show();
+        return leftPanel;
     }
 
     private DestinationDirectoryChooser createDestinationDirectoryChooser(Stage primaryStage) {
