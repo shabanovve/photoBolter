@@ -14,10 +14,7 @@ import ru.photoBolter.controller.ChangeDestinationDirectoryObserver;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
-import ru.photoBolter.view.DestinationDirectoryChooser;
-import ru.photoBolter.view.FileTreeView;
-import ru.photoBolter.view.PhotoView;
-import ru.photoBolter.view.SourceDirectoryChooser;
+import ru.photoBolter.view.*;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -36,10 +33,12 @@ public class App extends Application {
 
         HBox root = new HBox();
 
-        VBox leftPanel = createLeftPanel(primaryStage);
+        ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver = new ChangeDestinationDirectoryObserver();
+        changeDestinationDirectoryObserver.getObservedList().add(model);
+        VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver);
 
         root.getChildren().add(leftPanel);
-        root.getChildren().add(createRightPanel());
+        root.getChildren().add(createRightPanel(changeDestinationDirectoryObserver));
 
 
         primaryStage.setScene(new Scene(root));
@@ -56,8 +55,12 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private VBox createRightPanel() {
+    private VBox createRightPanel(ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
         VBox rightPanel = new VBox();
+
+        rightPanel.getChildren().add(
+                createDestinationTextField(changeDestinationDirectoryObserver).getView()
+        );
 
         PhotoView photoView = new PhotoView();
         model.setChangeCurrentFileObserver(
@@ -69,7 +72,14 @@ public class App extends Application {
         return rightPanel;
     }
 
-    private VBox createLeftPanel(Stage primaryStage) {
+    private DestinationTextField createDestinationTextField(ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
+        DestinationTextField destinationTextField = new DestinationTextField();
+        destinationTextField.changeDestinationDirectory(model.getDestinationDirectory());
+        changeDestinationDirectoryObserver.getObservedList().add(destinationTextField);
+        return destinationTextField;
+    }
+
+    private VBox createLeftPanel(Stage primaryStage, ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
         VBox leftPanel = new VBox();
 
         SourceDirectoryChooser sourceDirectoryChooser = createSourceDirectoryChooser(primaryStage);
@@ -77,10 +87,8 @@ public class App extends Application {
                 sourceDirectoryChooser.getView()
         );
 
-        DestinationDirectoryChooser destinationDirectoryChooser = createDestinationDirectoryChooser(primaryStage);
-        model.setChangeDestinatonDirectoryObserver(
-                new ChangeDestinationDirectoryObserver(Arrays.asList(destinationDirectoryChooser))
-        );
+        DestinationDirectoryChooser destinationDirectoryChooser = createDestinationDirectoryChooser(primaryStage, changeDestinationDirectoryObserver);
+        model.setChangeDestinatonDirectoryObserver(changeDestinationDirectoryObserver);
         leftPanel.getChildren().add(
                 destinationDirectoryChooser.getView()
         );
@@ -98,10 +106,12 @@ public class App extends Application {
         return leftPanel;
     }
 
-    private DestinationDirectoryChooser createDestinationDirectoryChooser(Stage primaryStage) {
+    private DestinationDirectoryChooser createDestinationDirectoryChooser(
+            Stage primaryStage, ChangeDestinationDirectoryObserver observer
+    ) {
         DestinationDirectoryChooser destinationDirectoryChooser = new DestinationDirectoryChooser();
         destinationDirectoryChooser.setStage(primaryStage);
-        destinationDirectoryChooser.setObserver(new ChangeDestinationDirectoryObserver(Arrays.asList(model)));
+        destinationDirectoryChooser.setObserver(observer);
         destinationDirectoryChooser.setInitialDirectory(model.getDestinationDirectory().toFile());
         return destinationDirectoryChooser;
     }
