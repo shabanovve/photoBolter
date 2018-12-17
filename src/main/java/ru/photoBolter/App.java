@@ -3,6 +3,8 @@ package ru.photoBolter;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -18,10 +20,12 @@ import ru.photoBolter.view.PhotoView;
 import ru.photoBolter.view.SourceDirectoryChooser;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class App extends Application {
 
     private Model model = new Model();
+    private Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) {
         launch(args);
@@ -32,13 +36,22 @@ public class App extends Application {
 
         HBox root = new HBox();
 
-        root.getChildren().add(createLeftPanel(primaryStage));
+        VBox leftPanel = createLeftPanel(primaryStage);
+
+        root.getChildren().add(leftPanel);
         root.getChildren().add(createRightPanel());
 
 
         primaryStage.setScene(new Scene(root));
 
         makeMaximizedWindow(primaryStage);
+
+        primaryStage.addEventHandler(KeyEvent.ANY, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                
+                logger.info("Pressed " + keyEvent.getCode().getName());
+            }
+        });
 
         primaryStage.show();
     }
