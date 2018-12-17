@@ -2,6 +2,7 @@ package ru.photoBolter.view;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import ru.photoBolter.Constants;
 import ru.photoBolter.controller.ChangeCurrentFileObservable;
 
 import java.nio.file.Path;
@@ -22,11 +23,11 @@ public class PhotoView implements ChangeCurrentFileObservable {
         Image image = new Image(pathToFile.toFile().toURI().toString());
         imageView.setPreserveRatio(true);
         if (image.getHeight() > image.getWidth()) {
-            imageView.setFitWidth(800);
+            imageView.setFitWidth(Constants.PHOTO_WIDTH);
             imageView.setFitHeight(0);
         } else {
             imageView.setFitWidth(0);
-            imageView.setFitHeight(800);
+            imageView.setFitHeight(Constants.PHOTO_WIDTH);
         }
 
         imageView.setImage(image);
