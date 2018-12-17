@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeDestinationDirectoryObserver;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
+import ru.photoBolter.model.FileService;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
 import ru.photoBolter.view.*;
@@ -23,6 +24,7 @@ public class App extends Application {
 
     private Model model = new Model();
     private Logger logger = Logger.getLogger(App.class.getName());
+    private final FileService fileService = new FileService();
 
     public static void main(String[] args) {
         launch(args);
@@ -47,7 +49,9 @@ public class App extends Application {
 
         primaryStage.addEventHandler(KeyEvent.ANY, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                
+                if (!model.getCurrentFile().toFile().isDirectory()) {
+                    fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
+                }
                 logger.info("Pressed " + keyEvent.getCode().getName());
             }
         });

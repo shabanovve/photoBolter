@@ -3,11 +3,6 @@ package ru.photoBolter.model;
 import ru.photoBolter.controller.*;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-
-import static ru.photoBolter.Constants.DESTINATION_DIRECTORY;
-import static ru.photoBolter.Constants.SOURCE_DIRECTORY;
 
 public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFileObservable, ChangeDestinationDirectoryObservable
 {
@@ -40,7 +35,13 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     }
 
     public void setDestinationDirectory(Path destinationDirectory) {
-        this.destinationDirectory = destinationDirectory;
+        if (destinationDirectory != null) {
+            this.destinationDirectory = destinationDirectory;
+        }
+    }
+
+    public Path getCurrentFile() {
+        return currentFile;
     }
 
     private ChangeSoureDirectoryObserver changeSoureDirectoryObserver;
@@ -79,7 +80,9 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     }
 
     public void setCurrentFile(Path currentFile) {
-        this.currentFile = currentFile;
+        if (currentFile != null) {
+            this.currentFile = currentFile;
+        }
     }
 
     @Override

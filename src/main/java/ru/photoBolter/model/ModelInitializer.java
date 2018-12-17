@@ -2,6 +2,7 @@ package ru.photoBolter.model;
 
 import ru.photoBolter.exception.NoConfigException;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
@@ -16,12 +17,17 @@ public class ModelInitializer {
             logger.warning(e.getMessage());
         }
 
+        Path userDirectory = Paths.get(System.getProperty("user.dir"));
         if (model.getSourceDirectory() == null) {
-            model.setSourceDirectory(Paths.get(System.getProperty("user.dir")));
+            model.setSourceDirectory(userDirectory);
         }
 
         if (model.getDestinationDirectory() == null) {
-            model.setDestinationDirectory(Paths.get(System.getProperty("user.dir")));
+            model.setDestinationDirectory(userDirectory);
+        }
+
+        if (model.getCurrentFile() == null) {
+            model.setCurrentFile(userDirectory);
         }
     }
 }
