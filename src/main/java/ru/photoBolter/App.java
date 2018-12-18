@@ -49,7 +49,8 @@ public class App extends Application {
 
         primaryStage.addEventHandler(KeyEvent.ANY, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                if (!model.getCurrentFile().toFile().isDirectory()) {
+                boolean notDirectory = !model.getCurrentFile().toFile().isDirectory();
+                if (notDirectory) {
                     fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
                 }
                 logger.info("Pressed " + keyEvent.getCode().getName());

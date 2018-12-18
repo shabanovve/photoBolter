@@ -44,5 +44,10 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.drewnoakes</groupId>
+      <artifactId>metadata-extractor</artifactId>
+      <version>RELEASE</version>
+    </dependency>
   </dependencies>
 </project>
