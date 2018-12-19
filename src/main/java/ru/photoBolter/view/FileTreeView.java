@@ -8,16 +8,18 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
+import ru.photoBolter.controller.ChangeDestinationDirectoryObservable;
 import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
 import ru.photoBolter.controller.StatusObserverable;
 import ru.photoBolter.model.PathContainer;
+import ru.photoBolter.util.FilePathHelper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObserverable {
+public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObserverable, ChangeDestinationDirectoryObservable {
     private Logger logger = Logger.getLogger(FileTreeView.class.getName());
     private final Node folderIcon = new ImageView(
             new Image(getClass().getResourceAsStream("../../../folder.png"))
@@ -26,6 +28,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
 
     private TreeView<PathContainer> tree;
     private ChangeCurrentFileObserver changeCurrentFileObserver;
+    private Path destination;
 
     public FileTreeView() {
         tree = new TreeView();
@@ -45,6 +48,10 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
         this.changeCurrentFileObserver = changeCurrentFileObserver;
     }
 
+    public void setDestination(Path destination) {
+        this.destination = destination;
+    }
+
     @Override
     public void changeSourceDirectory(Path path) {
         init(path);
@@ -60,7 +67,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
             Files.list(path).forEach(filePath -> {
                 TreeItem<PathContainer> item = new TreeItem(
                         new PathContainer(filePath),
-                        getIcon(filePath)
+                        getIcon(filePath, FilePathHelper.checkCopy(filePath, destination))
                 );
                 rootItem.getChildren().add(item);
             });
@@ -101,5 +108,19 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
         } else {
             return getIcon(path);
         }
+    }
+
+    @Override
+    public void changeDestinationDirectory(Path path) {
+        this.destination = path;
+
+        rootItem.getChildren().forEach(treeElement -> {
+            treeElement.setGraphic(
+                    getIcon(
+                            path,
+                            FilePathHelper.checkCopy(treeElement.getValue().getPath(), destination)
+                    )
+            );
+        });
     }
 }
