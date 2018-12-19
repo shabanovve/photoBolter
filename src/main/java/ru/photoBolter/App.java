@@ -12,9 +12,11 @@ import javafx.stage.Stage;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeDestinationDirectoryObserver;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
+import ru.photoBolter.controller.StatusObserver;
 import ru.photoBolter.model.FileService;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
+import ru.photoBolter.util.FilePathHelper;
 import ru.photoBolter.view.*;
 
 import java.util.Arrays;
@@ -35,9 +37,10 @@ public class App extends Application {
 
         HBox root = new HBox();
 
+        StatusObserver statusObserver = new StatusObserver();
         ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver = new ChangeDestinationDirectoryObserver();
         changeDestinationDirectoryObserver.getObservedList().add(model);
-        VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver);
+        VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver, statusObserver);
 
         root.getChildren().add(leftPanel);
         root.getChildren().add(createRightPanel(changeDestinationDirectoryObserver));
@@ -52,6 +55,8 @@ public class App extends Application {
                 boolean notDirectory = !model.getCurrentFile().toFile().isDirectory();
                 if (notDirectory) {
                     fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
+                    boolean copied = FilePathHelper.checkCopy(model.getCurrentFile(), model.getDestinationDirectory());
+                    statusObserver.changeStatus(model.getCurrentFile(), copied);
                 }
                 logger.info("Pressed " + keyEvent.getCode().getName());
             }
@@ -84,7 +89,7 @@ public class App extends Application {
         return destinationTextField;
     }
 
-    private VBox createLeftPanel(Stage primaryStage, ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
+    private VBox createLeftPanel(Stage primaryStage, ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver, StatusObserver statusObserver) {
         VBox leftPanel = new VBox();
 
         SourceDirectoryChooser sourceDirectoryChooser = createSourceDirectoryChooser(primaryStage);
@@ -101,6 +106,8 @@ public class App extends Application {
         FileTreeView fileTreeView = new FileTreeView();
         fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
         fileTreeView.init(model.getSourceDirectory());
+
+        statusObserver.setStatusObserverable(fileTreeView);
 
         model.setChangeSoureDirectoryObserver(
                 new ChangeSoureDirectoryObserver(Arrays.asList(fileTreeView, sourceDirectoryChooser))

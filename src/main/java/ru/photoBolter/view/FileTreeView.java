@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
+import ru.photoBolter.controller.StatusObserverable;
 import ru.photoBolter.model.PathContainer;
 
 import java.io.IOException;
@@ -16,11 +17,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-public class FileTreeView implements ChangeSourceDirectoryObservable {
+public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObserverable {
     private Logger logger = Logger.getLogger(FileTreeView.class.getName());
     private final Node folderIcon = new ImageView(
             new Image(getClass().getResourceAsStream("../../../folder.png"))
     );
+    private TreeItem<PathContainer> rootItem;
 
     private TreeView<PathContainer> tree;
     private ChangeCurrentFileObserver changeCurrentFileObserver;
@@ -49,7 +51,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable {
     }
 
     public void init(Path path) {
-        TreeItem<PathContainer> rootItem = new TreeItem(
+        rootItem = new TreeItem(
                 path.getName(path.getNameCount() - 1),
                 folderIcon
         );
@@ -70,16 +72,34 @@ public class FileTreeView implements ChangeSourceDirectoryObservable {
     }
 
     private ImageView getIcon(Path filePath) {
-        ImageView imageView = null;
         if (Files.isDirectory(filePath)) {
-            imageView = new ImageView(
+            return new ImageView(
                     new Image(getClass().getResourceAsStream("../../../folder.png"))
             );
         } else {
-            imageView = new ImageView(
+            return new ImageView(
                     new Image(getClass().getResourceAsStream("../../../file.png"))
             );
         }
-        return imageView;
+    }
+
+    @Override
+    public void changeStatus(Path path, boolean copied) {
+        TreeItem<PathContainer> treeElement = rootItem.getChildren()
+                .stream()
+                .filter(item -> item.getValue().getPath().equals(path))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+        treeElement.setGraphic(getIcon(path, copied));
+    }
+
+    private ImageView getIcon(Path path, boolean copied) {
+        if (copied) {
+            return new ImageView(
+                    new Image(getClass().getResourceAsStream("../../../true.png"))
+            );
+        } else {
+            return getIcon(path);
+        }
     }
 }
