@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import static ru.photoBolter.Constants.DESTINATION_DIRECTORY;
 import static ru.photoBolter.Constants.FILE_NAME;
 import static ru.photoBolter.Constants.SOURCE_DIRECTORY;
 
@@ -29,6 +30,9 @@ public class PropertiesLoader {
         if (appProps.getProperty(SOURCE_DIRECTORY) != null) {
             model.setSourceDirectory(
                     Paths.get(appProps.getProperty(SOURCE_DIRECTORY))
+            );
+            model.setDestinationDirectory(
+                    Paths.get(appProps.getProperty(DESTINATION_DIRECTORY))
             );
         }
     }
