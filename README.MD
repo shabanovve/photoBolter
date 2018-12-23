@@ -1,6 +1,6 @@
 # Photo Bolter
 This is application to make order photos heap.
-To achieve this aimp place photo from one direstory to
+To achieve this aimp place photo from one directory to
 another with obvious algorithm.
 
 Algorithm is simple:
