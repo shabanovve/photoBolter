@@ -21,4 +21,4 @@ To build you need [Maven](https://maven.apache.org/) and [jdk 1.8](https://www.o
 
 # How to run
 
-```java -jar target/photoBolter-1.0-SNAPSHOT-jar-with-dependencies.jar```
+```java -jar photoBolter-jar-with-dependencies.jar```
