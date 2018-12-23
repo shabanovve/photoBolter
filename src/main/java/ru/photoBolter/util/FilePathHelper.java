@@ -30,7 +30,7 @@ public class FilePathHelper {
                 .append(mounthSymbols)
                 .append("/").append(year % 1000).append(mounthNumberString).append(dayOfMonthString)
                 .append("/").toString();
-        return "/"  + datePath + source.getName(source.getNameCount() - 1);
+        return "/" + datePath + source.getName(source.getNameCount() - 1);
     }
 
     private static LocalDate getLocalDateFromMetadata(Path source) {
@@ -49,7 +49,22 @@ public class FilePathHelper {
     }
 
     public static boolean checkCopy(Path currentFile, Path destinationDirectory) {
+        if (currentFile.toFile().isDirectory()) {
+            return false;
+        }
+
+        if (!isItJpgFile(currentFile)) {
+            return false;
+        }
         return Files.exists(getDestinationPath(currentFile, destinationDirectory));
+    }
+
+    private static boolean isItJpgFile(Path file) {
+        return file
+                .getName(file.getNameCount() - 1)
+                .toString()
+                .toLowerCase()
+                .contains(".jpg");
     }
 
     public static Path getDestinationPath(Path source, Path destinationDirectory) {

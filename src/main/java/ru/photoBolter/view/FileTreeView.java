@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObserverable, ChangeDestinationDirectoryObservable {
     private Logger logger = Logger.getLogger(FileTreeView.class.getName());
     private final Node folderIcon = new ImageView(
-            new Image(getClass().getResourceAsStream("../../../folder.png"))
+            new Image(getClass().getResourceAsStream("/folder.png"))
     );
     private TreeItem<PathContainer> rootItem;
 
@@ -64,7 +64,9 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
         );
         rootItem.setExpanded(true);
         try {
-            Files.list(path).forEach(filePath -> {
+            Files.list(path)
+                    .filter(itemFile -> !itemFile.toFile().isDirectory())
+                    .forEach(filePath -> {
                 TreeItem<PathContainer> item = new TreeItem(
                         new PathContainer(filePath),
                         getIcon(filePath, FilePathHelper.checkCopy(filePath, destination))
@@ -81,11 +83,11 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
     private ImageView getIcon(Path filePath) {
         if (Files.isDirectory(filePath)) {
             return new ImageView(
-                    new Image(getClass().getResourceAsStream("../../../folder.png"))
+                    new Image(getClass().getResourceAsStream("/folder.png"))
             );
         } else {
             return new ImageView(
-                    new Image(getClass().getResourceAsStream("../../../file.png"))
+                    new Image(getClass().getResourceAsStream("/file.png"))
             );
         }
     }
@@ -103,7 +105,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
     private ImageView getIcon(Path path, boolean copied) {
         if (copied) {
             return new ImageView(
-                    new Image(getClass().getResourceAsStream("../../../true.png"))
+                    new Image(getClass().getResourceAsStream("/true.png"))
             );
         } else {
             return getIcon(path);
