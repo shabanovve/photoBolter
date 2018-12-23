@@ -20,17 +20,33 @@ public class FilePathHelper {
         LocalDate localDate = getLocalDateFromMetadata(source);
 
         int year = Year.from(localDate).getValue();
-        int mounthNumber = YearMonth.from(localDate).getMonth().getValue();
-        String mounthNumberString = mounthNumber < 10 ? "0" + String.valueOf(mounthNumber) : String.valueOf(mounthNumber);
-        String mounthSymbols = YearMonth.from(localDate).getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toLowerCase();
+        int monthNumber = YearMonth.from(localDate).getMonth().getValue();
+        String monthNumberString = monthNumber < 10 ? "0" + String.valueOf(monthNumber) : String.valueOf(monthNumber);
+        String monthSymbols = YearMonth.from(localDate).getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toLowerCase();
         int dayOfMonthInt = MonthDay.from(localDate).getDayOfMonth();
         String dayOfMonthString = dayOfMonthInt < 10 ? "0" + String.valueOf(dayOfMonthInt) : String.valueOf(dayOfMonthInt);
         String datePath = new StringBuffer().append(year)
-                .append("/").append(mounthNumberString)
-                .append(mounthSymbols)
-                .append("/").append(year % 1000).append(mounthNumberString).append(dayOfMonthString)
+                .append("/").append(monthNumberString)
+                .append(monthSymbols)
+                .append("/").append(year % 1000).append(monthNumberString).append(dayOfMonthString)
                 .append("/").toString();
+
+        validate(year, monthNumber, dayOfMonthInt);
         return "/" + datePath + source.getName(source.getNameCount() - 1);
+    }
+
+    private static void validate(int year, int mouthNumber, int dayOfMonthInt) {
+        if (year < 1970) {
+            throw new RuntimeException("Wrong year = " + year);
+        }
+
+        if (mouthNumber < 1 || mouthNumber > 12) {
+            throw new RuntimeException("Wrong month = " + mouthNumber);
+        }
+
+        if (dayOfMonthInt < 1 || dayOfMonthInt > 31) {
+            throw new RuntimeException("Wrong day = " + dayOfMonthInt);
+        }
     }
 
     private static LocalDate getLocalDateFromMetadata(Path source) {
