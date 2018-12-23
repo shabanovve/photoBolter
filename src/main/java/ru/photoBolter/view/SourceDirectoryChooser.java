@@ -26,6 +26,7 @@ public class SourceDirectoryChooser extends AbstractDirectoryChooser implements 
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                directoryChooser.setInitialDirectory(getInitialDirectory());
                 File directory = directoryChooser.showDialog(stage);
                 if (directory != null) {
                     changeSoureDirectoryObserver.changeDirectory(directory.toPath());
