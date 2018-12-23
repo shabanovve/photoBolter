@@ -1,11 +1,11 @@
 # Photo Bolter
 This is application to make order photos heap.
-To achieve this aimp place photo from one directory to
+To achieve this aim place photo from one directory to
 another with obvious algorithm.
 
 Algorithm is simple:
 
-* Get create date from jpg file metadate
+* Get create date from jpg file metadata
 * Construct destination directory path according to create date
 * Copy file by pressing `Enter` button on keyboard
 
