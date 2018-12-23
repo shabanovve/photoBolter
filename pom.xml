@@ -43,6 +43,8 @@
                     </archive>
                 </configuration>
             </plugin>
+
+            <!--Pack as javaFx application -->
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -52,6 +54,8 @@
                     <mainClass>${main.class}</mainClass>
                 </configuration>
             </plugin>
+
+            <!--Include dependencies into jar file-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -75,11 +79,14 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!--For reading jpg metadata-->
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>metadata-extractor</artifactId>
             <version>RELEASE</version>
         </dependency>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
