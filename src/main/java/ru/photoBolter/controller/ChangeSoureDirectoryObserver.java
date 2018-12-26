@@ -1,20 +1,17 @@
 package ru.photoBolter.controller;
 
 import java.nio.file.Path;
-import java.util.List;
 
 public class ChangeSoureDirectoryObserver extends AbstractChangeDirectoryObserver {
 
-    private final List<ChangeSourceDirectoryObservable> observedList;
+    private final ChangeSourceDirectoryObservable observed;
 
-    public ChangeSoureDirectoryObserver(List<ChangeSourceDirectoryObservable> observedList) {
-        this.observedList = observedList;
+    public ChangeSoureDirectoryObserver(ChangeSourceDirectoryObservable observed) {
+        this.observed = observed;
     }
 
     @Override
     public void changeDirectory(Path path) {
-        observedList.stream().forEach(observable -> {
-            observable.changeSourceDirectory(path);
-        });
+        observed.changeSourceDirectory(path);
     }
 }

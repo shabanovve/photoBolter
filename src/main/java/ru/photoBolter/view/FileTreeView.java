@@ -9,18 +9,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeDestinationDirectoryObservable;
-import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
+import ru.photoBolter.controller.ChangeFileTreeObservable;
 import ru.photoBolter.controller.StatusObserverable;
-import ru.photoBolter.exception.FileListExecption;
 import ru.photoBolter.model.PathContainer;
-import ru.photoBolter.util.FilePathHelper;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Logger;
 
-public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObserverable, ChangeDestinationDirectoryObservable {
+import static java.util.stream.Collectors.toList;
+
+public class FileTreeView implements ChangeFileTreeObservable, StatusObserverable, ChangeDestinationDirectoryObservable {
     private Logger logger = Logger.getLogger(FileTreeView.class.getName());
     private final Node folderIcon = new ImageView(
             new Image(getClass().getResourceAsStream("/folder.png"))
@@ -53,30 +53,30 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
         this.destination = destination;
     }
 
+
     @Override
-    public void changeSourceDirectory(Path path) {
-        init(path);
+    public void changeFileTree(String sourceDirectoryName, List<PathContainer> pathContainers) {
+        init(sourceDirectoryName, pathContainers);
     }
 
-    public void init(Path path) {
+    public void init(String sourceDirectoryName, List<PathContainer> pathContainers) {
         rootItem = new TreeItem(
-                path.getName(path.getNameCount() - 1),
+                sourceDirectoryName,
                 folderIcon
         );
-        rootItem.setExpanded(true);
-        try {
-            Files.list(path)
-                    .filter(itemFile -> !itemFile.toFile().isDirectory())
-                    .forEach(filePath -> {
-                TreeItem<PathContainer> item = new TreeItem(
-                        new PathContainer(filePath),
-                        getIcon(filePath, FilePathHelper.checkCopy(filePath, destination))
-                );
-                rootItem.getChildren().add(item);
-            });
-        } catch (IOException e) {
-            throw new FileListExecption(e);
-        }
+
+        List<TreeItem> treeItems = pathContainers.stream()
+                .map(pathContainer -> new TreeItem(
+                        pathContainer,
+                        getIcon(pathContainer.getPath()))
+                )
+                .collect(toList());
+
+        treeItems
+                .forEach(item -> {
+                    rootItem.getChildren().add(item);
+                });
+
         tree.setRoot(rootItem);
         tree.refresh();
     }
@@ -121,7 +121,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
             treeElement.setGraphic(
                     getIcon(
                             path,
-                            FilePathHelper.checkCopy(treeElement.getValue().getPath(), destination)
+                            false
                     )
             );
         });

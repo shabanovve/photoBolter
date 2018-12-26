@@ -9,18 +9,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import ru.photoBolter.controller.ChangeCurrentFileObserver;
-import ru.photoBolter.controller.ChangeDestinationDirectoryObserver;
-import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
-import ru.photoBolter.controller.StatusObserver;
+import ru.photoBolter.controller.*;
 import ru.photoBolter.model.FileService;
 import ru.photoBolter.model.Model;
 import ru.photoBolter.model.ModelInitializer;
 import ru.photoBolter.util.FilePathHelper;
 import ru.photoBolter.view.*;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
+
+import static ru.photoBolter.util.FilePathHelper.getName;
 
 public class App extends Application {
 
@@ -33,7 +31,7 @@ public class App extends Application {
     }
 
     public void start(final Stage primaryStage) {
-        ModelInitializer.init(model);
+        ModelInitializer.init(model, fileService);
 
         HBox root = new HBox();
 
@@ -106,15 +104,21 @@ public class App extends Application {
         FileTreeView fileTreeView = new FileTreeView();
         fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
         fileTreeView.setDestination(model.getDestinationDirectory());
-        fileTreeView.init(model.getSourceDirectory());
+        fileTreeView.init(
+                getName(model.getSourceDirectory()),
+                model.getPathContainerList()
+        );
+        model.setFileService(fileService);
 
         changeDestinationDirectoryObserver.getObservedList().add(fileTreeView);
 
         statusObserver.setStatusObserverable(fileTreeView);
 
         model.setChangeSoureDirectoryObserver(
-                new ChangeSoureDirectoryObserver(Arrays.asList(fileTreeView, sourceDirectoryChooser))
+                new ChangeSoureDirectoryObserver(sourceDirectoryChooser)
         );
+        model.setChangeFileTreeObserver(new ChangeFileTreeObserver(fileTreeView));
+
         leftPanel.getChildren().add(
                 fileTreeView.getView()
         );
@@ -134,7 +138,7 @@ public class App extends Application {
     private SourceDirectoryChooser createSourceDirectoryChooser(Stage primaryStage) {
         SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
         sourceDirectoryChooser.setStage(primaryStage);
-        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(Arrays.asList(model)));
+        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(model));
         sourceDirectoryChooser.setInitialDirectory(model.getSourceDirectory().toFile());
         return sourceDirectoryChooser;
     }

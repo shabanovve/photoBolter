@@ -3,6 +3,9 @@ package ru.photoBolter.model;
 import ru.photoBolter.controller.*;
 
 import java.nio.file.Path;
+import java.util.List;
+
+import static ru.photoBolter.util.FilePathHelper.getName;
 
 public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFileObservable, ChangeDestinationDirectoryObservable
 {
@@ -13,6 +16,25 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     private ChangeCurrentFileObserver changeCurrentFileObserver;
     private PropertiesSaver propertiesSaver;
     private ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver;
+    private ChangeFileTreeObserver changeFileTreeObserver;
+    private FileService fileService;
+    private List<PathContainer> pathContainerList;
+
+    public void setPathContainerList(List<PathContainer> pathContainerList) {
+        this.pathContainerList = pathContainerList;
+    }
+
+    public List<PathContainer> getPathContainerList() {
+        return pathContainerList;
+    }
+
+    public void setChangeFileTreeObserver(ChangeFileTreeObserver changeFileTreeObserver) {
+        this.changeFileTreeObserver = changeFileTreeObserver;
+    }
+
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     public void setPropertiesSaver(PropertiesSaver propertiesSaver) {
         this.propertiesSaver = propertiesSaver;
@@ -60,7 +82,8 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
             return;
         }
         this.sourceDirectory = path;
-        changeSoureDirectoryObserver.changeDirectory(this.sourceDirectory);
+        pathContainerList = fileService.createFileList(sourceDirectory);
+        changeFileTreeObserver.changeFileTree(getName(this.sourceDirectory), this.pathContainerList);
         if (propertiesSaver != null) {
             propertiesSaver.save(this);
         }

@@ -89,5 +89,10 @@ public class FilePathHelper {
         return Paths.get(destinationDirectory.toString() + getSufix(source));
     }
 
+    public static String getName(Path path) {
+        return path
+                .getName(path.getNameCount() - 1)
+                .toString();
+    }
 
 }
