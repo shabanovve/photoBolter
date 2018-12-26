@@ -1,5 +1,7 @@
 package ru.photoBolter.model;
 
+import ru.photoBolter.exception.SaveConfigException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,7 +32,7 @@ public class PropertiesSaver {
         try {
             prop.store(Files.newOutputStream(Paths.get(FILE_NAME)), null);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SaveConfigException(e);
         }
     }
 }

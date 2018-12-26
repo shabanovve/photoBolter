@@ -11,6 +11,7 @@ import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeDestinationDirectoryObservable;
 import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
 import ru.photoBolter.controller.StatusObserverable;
+import ru.photoBolter.exception.FileListExecption;
 import ru.photoBolter.model.PathContainer;
 import ru.photoBolter.util.FilePathHelper;
 
@@ -74,7 +75,7 @@ public class FileTreeView implements ChangeSourceDirectoryObservable, StatusObse
                 rootItem.getChildren().add(item);
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileListExecption(e);
         }
         tree.setRoot(rootItem);
         tree.refresh();

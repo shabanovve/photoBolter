@@ -1,5 +1,7 @@
 package ru.photoBolter.model;
 
+import ru.photoBolter.exception.CopyFileExeption;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +24,7 @@ public class FileService {
                     StandardCopyOption.REPLACE_EXISTING
             );
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CopyFileExeption(e);
         }
     }
 

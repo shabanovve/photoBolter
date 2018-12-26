@@ -1,5 +1,7 @@
 package ru.photoBolter.model;
 
+import ru.photoBolter.exception.FindConfigFileException;
+import ru.photoBolter.exception.ModelIsNullException;
 import ru.photoBolter.exception.NoConfigException;
 
 import java.io.FileInputStream;
@@ -18,7 +20,7 @@ public class PropertiesLoader {
 
     public void load(Model model) throws NoConfigException {
         if (model == null) {
-            throw new RuntimeException("model cannot be null");
+            throw new ModelIsNullException("model cannot be null");
         }
 
         Path configFile = findConfigFile();
@@ -56,7 +58,7 @@ public class PropertiesLoader {
                     .findFirst()
                     .orElseThrow(() -> new NoConfigException("No config file, sorry"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FindConfigFileException(e);
         }
     }
 

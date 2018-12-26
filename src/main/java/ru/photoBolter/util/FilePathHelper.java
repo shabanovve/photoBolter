@@ -5,6 +5,8 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import ru.photoBolter.exception.MetadataException;
+import ru.photoBolter.exception.ValidateDateException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,15 +39,15 @@ public class FilePathHelper {
 
     private static void validate(int year, int mouthNumber, int dayOfMonthInt) {
         if (year < 1970) {
-            throw new RuntimeException("Wrong year = " + year);
+            throw new ValidateDateException("Wrong year = " + year);
         }
 
         if (mouthNumber < 1 || mouthNumber > 12) {
-            throw new RuntimeException("Wrong month = " + mouthNumber);
+            throw new ValidateDateException("Wrong month = " + mouthNumber);
         }
 
         if (dayOfMonthInt < 1 || dayOfMonthInt > 31) {
-            throw new RuntimeException("Wrong day = " + dayOfMonthInt);
+            throw new ValidateDateException("Wrong day = " + dayOfMonthInt);
         }
     }
 
@@ -54,9 +56,9 @@ public class FilePathHelper {
         try {
             metadata = ImageMetadataReader.readMetadata(Files.newInputStream(source));
         } catch (ImageProcessingException e) {
-            throw new RuntimeException(e);
+            throw new MetadataException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new MetadataException(e);
         }
 
         Directory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
