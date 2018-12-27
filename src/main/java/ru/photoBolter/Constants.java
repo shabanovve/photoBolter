@@ -6,4 +6,5 @@ public class Constants {
     public static final String DESTINATION_DIRECTORY = "DESTINATION_DIRECTORY";
 
     public static final double PHOTO_WIDTH = 800;
+    public static final double PHOTO_HEIGHT = 800;
 }

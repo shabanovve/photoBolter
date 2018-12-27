@@ -7,6 +7,9 @@ import ru.photoBolter.controller.ChangeCurrentFileObservable;
 
 import java.nio.file.Path;
 
+import static ru.photoBolter.Constants.PHOTO_HEIGHT;
+import static ru.photoBolter.Constants.PHOTO_WIDTH;
+
 public class PhotoView implements ChangeCurrentFileObservable {
     private Path pathToFile;
     private final ImageView imageView = new ImageView();
@@ -22,15 +25,18 @@ public class PhotoView implements ChangeCurrentFileObservable {
     public void refresh() {
         Image image = new Image(pathToFile.toFile().toURI().toString());
         imageView.setPreserveRatio(true);
-        if (image.getHeight() > image.getWidth()) {
-            imageView.setFitWidth(Constants.PHOTO_WIDTH);
-            imageView.setFitHeight(0);
-        } else {
-            imageView.setFitWidth(0);
-            imageView.setFitHeight(Constants.PHOTO_WIDTH);
-        }
-
+        handlePortraitLandscape(image);
         imageView.setImage(image);
+    }
+
+    private void handlePortraitLandscape(Image image) {
+        if (image.getHeight() > image.getWidth()) {
+            imageView.setFitWidth(0);
+            imageView.setFitHeight(PHOTO_HEIGHT);
+        } else {
+            imageView.setFitWidth(PHOTO_WIDTH);
+            imageView.setFitHeight(0);
+        }
     }
 
     @Override
