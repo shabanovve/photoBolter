@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.toList;
 
-public class FileTreeView implements ChangeFileTreeObservable, StatusObserverable, ChangeDestinationDirectoryObservable {
+public class FileTreeView implements ChangeFileTreeObservable, StatusObserverable {
     private Logger logger = Logger.getLogger(FileTreeView.class.getName());
     private final Node folderIcon = new ImageView(
             new Image(getClass().getResourceAsStream("/folder.png"))
@@ -120,14 +120,4 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
         treeElement.setGraphic(getIcon(pathContainer));
     }
 
-
-    @Override
-    public void changeDestinationDirectory(Path path) {
-        rootItem.getChildren().forEach(treeElement -> {
-                    treeElement.setGraphic(
-                            getIcon(treeElement.getValue())
-                    );
-                }
-        );
-    }
 }

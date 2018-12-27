@@ -134,8 +134,6 @@ public class App extends Application {
         );
         model.setFileService(fileService);
 
-        changeDestinationDirectoryObserver.getObservedList().add(fileTreeView);
-
         statusObserver.setStatusObserverable(fileTreeView);
 
         model.setChangeFileTreeObserver(new ChangeFileTreeObserver(fileTreeView));
