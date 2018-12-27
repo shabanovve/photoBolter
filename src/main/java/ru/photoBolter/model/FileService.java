@@ -1,8 +1,6 @@
 package ru.photoBolter.model;
 
-import ru.photoBolter.exception.CopyFileExeption;
-import ru.photoBolter.exception.FileListExecption;
-import ru.photoBolter.exception.MetadataException;
+import ru.photoBolter.exception.*;
 import ru.photoBolter.util.FilePathHelper;
 
 import java.io.IOException;
@@ -67,7 +65,7 @@ public class FileService {
             boolean copied = false;
             try {
                 copied = FilePathHelper.checkCopy(pathContainer, destinationDirectory);
-            } catch (MetadataException e) {
+            } catch (MetadataException | NoDirectoryInJpgException | NoDateInJpgException e) {
                 logger.warning(
                         String.format(
                                 "Cannot check copy of the file %s. %s",
@@ -92,7 +90,11 @@ public class FileService {
                 localDateFromMetadata = FilePathHelper.getLocalDateFromMetadata(pathContainer.getPath());
                 pathContainer.setCreateDate(localDateFromMetadata);
             } catch (MetadataException e) {
-                logger.warning("MetadataException!");
+                logger.warning("MetadataException! " + pathContainer.getPath().toString());
+            } catch (NoDirectoryInJpgException e) {
+                logger.warning(e.getMessage());
+            } catch (NoDateInJpgException e) {
+                logger.warning(e.getMessage());
             }
         }
 

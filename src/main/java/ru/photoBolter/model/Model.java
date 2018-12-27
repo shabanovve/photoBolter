@@ -83,6 +83,8 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         }
         this.sourceDirectory = path;
         pathContainerList = fileService.createFileList(sourceDirectory);
+        fileService.defineCreateDate(pathContainerList);
+        fileService.defineSufix(pathContainerList);
         fileService.defineStatus(pathContainerList, destinationDirectory);
         changeFileTreeObserver.changeFileTree(getName(this.sourceDirectory), this.pathContainerList);
         if (propertiesSaver != null) {

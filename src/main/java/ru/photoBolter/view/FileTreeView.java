@@ -36,7 +36,7 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
         tree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<PathContainer>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<PathContainer>> observable, TreeItem<PathContainer> oldValue, TreeItem<PathContainer> newValue) {
-                if (newValue.getValue() != null) {
+                if (newValue != null && newValue.getValue() != null) {
                     changeCurrentFileObserver.changeCurrentFile(newValue.getValue().getPath());
                 }
             }
