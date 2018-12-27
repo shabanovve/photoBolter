@@ -33,10 +33,10 @@ public class PressEnterHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent keyEvent) {
         if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-            boolean notDirectory = !model.getCurrentFile().toFile().isDirectory();
+            boolean notDirectory = !model.getCurrentFile().getPath().toFile().isDirectory();
             if (notDirectory) {
                 try {
-                    fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
+                    fileService.copyFile(model.getCurrentFile().getPath(), model.getDestinationDirectory());
                 } catch (CopyFileExeption e) {
                     logger.warning("CopyFileExeption!");
                     PathContainer pathContainer = correctStatus(WRONG);
@@ -45,7 +45,7 @@ public class PressEnterHandler implements EventHandler<KeyEvent> {
 
                 boolean copied = false;
                 try {
-                    copied = checkCopy(model.getCurrentFile(), model.getDestinationDirectory());
+                    copied = checkCopy(model.getCurrentFile().getPath(), model.getDestinationDirectory());
                 } catch (MetadataException e) {
                     logger.warning("CopyFileExeption!");
                 }
@@ -59,7 +59,7 @@ public class PressEnterHandler implements EventHandler<KeyEvent> {
 
     private PathContainer correctStatus(FileStatus status) {
         PathContainer pathContainer = FilePathHelper.getPathContainer(
-                model.getCurrentFile(),
+                model.getCurrentFile().getPath(),
                 model.getPathContainerList()
         );
         pathContainer.setStatus(status);

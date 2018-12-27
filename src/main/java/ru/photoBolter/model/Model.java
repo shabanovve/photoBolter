@@ -1,6 +1,7 @@
 package ru.photoBolter.model;
 
 import ru.photoBolter.controller.*;
+import ru.photoBolter.util.FilePathHelper;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -12,8 +13,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 
     private Path sourceDirectory;
     private Path destinationDirectory;
-    private Path currentFile;
-    private ChangeCurrentFileObserver changeCurrentFileObserver;
+    private PathContainer currentFile;
     private PropertiesSaver propertiesSaver;
     private ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver;
     private ChangeFileTreeObserver changeFileTreeObserver;
@@ -44,10 +44,6 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         this.changeDestinatonDirectoryObserver = changeDestinatonDirectoryObserver;
     }
 
-    public void setChangeCurrentFileObserver(ChangeCurrentFileObserver changeCurrentFileObserver) {
-        this.changeCurrentFileObserver = changeCurrentFileObserver;
-    }
-
     public void setSourceDirectory(Path sourceDirectory) {
         this.sourceDirectory = sourceDirectory;
     }
@@ -58,7 +54,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         }
     }
 
-    public Path getCurrentFile() {
+    public PathContainer getCurrentFile() {
         return currentFile;
     }
 
@@ -85,10 +81,10 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     }
 
     @Override
-    public void changeCurrentFile(Path currentFile) {
-        this.currentFile = currentFile;
-        if (checkJpgFile(currentFile)) {
-            changeCurrentFileObserver.changeCurrentFile(currentFile);
+    public void changeCurrentFile(Path path) {
+        this.currentFile = FilePathHelper.getPathContainer(path, pathContainerList);
+        if (checkJpgFile(currentFile.getPath())) {
+            //todo observer
         }
     }
 
@@ -97,7 +93,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         return stringFileName.toLowerCase().contains(".jpg");
     }
 
-    public void setCurrentFile(Path currentFile) {
+    public void setCurrentFile(PathContainer currentFile) {
         if (currentFile != null) {
             this.currentFile = currentFile;
         }

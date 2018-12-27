@@ -77,9 +77,6 @@ public class App extends Application {
         );
 
         PhotoView photoView = new PhotoView();
-        model.setChangeCurrentFileObserver(
-                new ChangeCurrentFileObserver(photoView)
-        );
         rightPanel.getChildren().add(
                 photoView.getView()
         );

@@ -37,8 +37,8 @@ public class ModelInitializer {
             model.setDestinationDirectory(userDirectory);
         }
 
-        if (model.getCurrentFile() == null || !Files.exists(model.getCurrentFile())) {
-            model.setCurrentFile(userDirectory);
+        if (model.getCurrentFile() == null || !Files.exists(model.getCurrentFile().getPath())) {
+            model.setCurrentFile(new PathContainer(userDirectory));
         }
     }
 }
