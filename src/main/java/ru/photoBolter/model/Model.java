@@ -19,6 +19,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     private ChangeFileTreeObserver changeFileTreeObserver;
     private FileService fileService;
     private List<PathContainer> pathContainerList;
+    private ChangeModelCurrentFileObserver changeModelCurrentFileObserver ;
 
     public void setPathContainerList(List<PathContainer> pathContainerList) {
         this.pathContainerList = pathContainerList;
@@ -66,6 +67,10 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         return destinationDirectory;
     }
 
+    public void setChangeModelCurrentFileObservable(ChangeModelCurrentFileObserver changeModelCurrentFileObserver) {
+        this.changeModelCurrentFileObserver = changeModelCurrentFileObserver;
+    }
+
     @Override
     public void changeSourceDirectory(Path path) {
         if (path.equals(this.sourceDirectory)) {
@@ -84,7 +89,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     public void changeCurrentFile(Path path) {
         this.currentFile = FilePathHelper.getPathContainer(path, pathContainerList);
         if (checkJpgFile(currentFile.getPath())) {
-            //todo observer
+            changeModelCurrentFileObserver.changeCurrentFile(currentFile);
         }
     }
 

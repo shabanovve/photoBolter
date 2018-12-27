@@ -41,8 +41,12 @@ public class App extends Application {
         changeSoureDirectoryObserver.getObservedList().add(model);
         VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver, statusObserver, changeSoureDirectoryObserver);
 
+        ChangeModelCurrentFileObserver changeModelCurrentFileObserver = new ChangeModelCurrentFileObserver();
+        model.setChangeModelCurrentFileObservable(changeModelCurrentFileObserver);
         root.getChildren().add(leftPanel);
-        root.getChildren().add(createRightPanel(changeDestinationDirectoryObserver, changeSoureDirectoryObserver));
+        root.getChildren().add(
+                createRightPanel(changeDestinationDirectoryObserver, changeSoureDirectoryObserver, changeModelCurrentFileObserver)
+        );
 
 
         primaryStage.setScene(new Scene(root));
@@ -60,7 +64,8 @@ public class App extends Application {
 
     private VBox createRightPanel(
             ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver,
-            ChangeSoureDirectoryObserver changeSoureDirectoryObserver
+            ChangeSoureDirectoryObserver changeSoureDirectoryObserver,
+            ChangeModelCurrentFileObserver changeModelCurrentFileObserver
     ) {
         VBox rightPanel = new VBox();
 
@@ -72,19 +77,22 @@ public class App extends Application {
                 createDestinationTextField(changeDestinationDirectoryObserver).getView()
         );
 
+        DateTextField dateTextField = createDateTextField();
         rightPanel.getChildren().add(
-                createDateTextField()
+                dateTextField.getView()
         );
+        changeModelCurrentFileObserver.getObservedList().add(dateTextField);
 
         PhotoView photoView = new PhotoView();
+        changeModelCurrentFileObserver.getObservedList().add(photoView);
         rightPanel.getChildren().add(
                 photoView.getView()
         );
         return rightPanel;
     }
 
-    private TextField createDateTextField() {
-        return new DateTextField().getView();
+    private DateTextField createDateTextField() {
+        return new DateTextField();
     }
 
     private SourceTextField createSourceTextField(ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {

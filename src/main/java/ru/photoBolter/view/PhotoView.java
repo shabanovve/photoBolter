@@ -2,15 +2,15 @@ package ru.photoBolter.view;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import ru.photoBolter.Constants;
-import ru.photoBolter.controller.ChangeCurrentFileObservable;
+import ru.photoBolter.controller.ChangeModelCurrentFileObservable;
+import ru.photoBolter.model.PathContainer;
 
 import java.nio.file.Path;
 
 import static ru.photoBolter.Constants.PHOTO_HEIGHT;
 import static ru.photoBolter.Constants.PHOTO_WIDTH;
 
-public class PhotoView implements ChangeCurrentFileObservable {
+public class PhotoView implements ChangeModelCurrentFileObservable {
     private Path pathToFile;
     private final ImageView imageView = new ImageView();
 
@@ -40,8 +40,8 @@ public class PhotoView implements ChangeCurrentFileObservable {
     }
 
     @Override
-    public void changeCurrentFile(Path currentFile) {
-        setPathToFile(currentFile);
+    public void changeCurrentFile(PathContainer pathContainer) {
+        setPathToFile(pathContainer.getPath());
         refresh();
     }
 }
