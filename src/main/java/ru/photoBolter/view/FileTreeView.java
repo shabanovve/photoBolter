@@ -7,20 +7,19 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import ru.photoBolter.controller.observer.ChangeCurrentFileObserver;
-import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
+import ru.photoBolter.controller.observable.ChangeDestinationDirectoryModelObservable;
 import ru.photoBolter.controller.observable.ChangeFileTreeObservable;
 import ru.photoBolter.controller.observable.StatusObserverable;
+import ru.photoBolter.controller.observer.ChangeCurrentFileObserver;
 import ru.photoBolter.exception.UnknownStatusException;
 import ru.photoBolter.model.PathContainer;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.toList;
 
-public class FileTreeView implements ChangeFileTreeObservable, StatusObserverable {
+public class FileTreeView implements ChangeFileTreeObservable, StatusObserverable, ChangeDestinationDirectoryModelObservable {
     private Logger logger = Logger.getLogger(FileTreeView.class.getName());
     private final Node folderIcon = new ImageView(
             new Image(getClass().getResourceAsStream("/folder.png"))
@@ -120,4 +119,8 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
         treeElement.setGraphic(getIcon(pathContainer));
     }
 
+    @Override
+    public void changeDestinationDirectory(String destinationDirectory) {
+        //todo make reinit
+    }
 }

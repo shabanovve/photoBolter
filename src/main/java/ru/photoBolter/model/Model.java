@@ -3,7 +3,7 @@ package ru.photoBolter.model;
 import ru.photoBolter.controller.observable.ChangeCurrentFileObservable;
 import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
 import ru.photoBolter.controller.observable.ChangeSourceDirectoryObservable;
-import ru.photoBolter.controller.observer.ChangeDestinationDirectoryObserver;
+import ru.photoBolter.controller.observer.ChangeDestinationDirectoryModelObserver;
 import ru.photoBolter.controller.observer.ChangeFileTreeObserver;
 import ru.photoBolter.controller.observer.ChangeModelCurrentFileObserver;
 import ru.photoBolter.util.FilePathHelper;
@@ -20,11 +20,11 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     private Path destinationDirectory;
     private PathContainer currentFile;
     private PropertiesSaver propertiesSaver;
-    private ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver;
     private ChangeFileTreeObserver changeFileTreeObserver;
     private FileService fileService;
     private List<PathContainer> pathContainerList;
     private ChangeModelCurrentFileObserver changeModelCurrentFileObserver ;
+    private ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver;
 
     public void setPathContainerList(List<PathContainer> pathContainerList) {
         this.pathContainerList = pathContainerList;
@@ -44,10 +44,6 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 
     public void setPropertiesSaver(PropertiesSaver propertiesSaver) {
         this.propertiesSaver = propertiesSaver;
-    }
-
-    public void setChangeDestinatonDirectoryObserver(ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver) {
-        this.changeDestinatonDirectoryObserver = changeDestinatonDirectoryObserver;
     }
 
     public void setSourceDirectory(Path sourceDirectory) {
@@ -74,6 +70,10 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
 
     public void setChangeModelCurrentFileObservable(ChangeModelCurrentFileObserver changeModelCurrentFileObserver) {
         this.changeModelCurrentFileObserver = changeModelCurrentFileObserver;
+    }
+
+    public void setChangeDestinationDirectoryModelObserver(ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver) {
+        this.changeDestinationDirectoryModelObserver = changeDestinationDirectoryModelObserver;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
             return;
         }
         this.destinationDirectory = path;
-        changeDestinatonDirectoryObserver.changeDirectory(this.destinationDirectory);
+        changeDestinationDirectoryModelObserver.changeDestinationDirectory(this.destinationDirectory.toString());
         if (propertiesSaver != null) {
             propertiesSaver.save(this);
         }

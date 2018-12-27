@@ -34,17 +34,24 @@ public class App extends Application {
         HBox root = new HBox();
 
         StatusObserver statusObserver = new StatusObserver();
+        ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver = new ChangeDestinationDirectoryModelObserver();
         ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver = new ChangeDestinationDirectoryObserver();
         changeDestinationDirectoryObserver.getObservedList().add(model);
         ChangeSoureDirectoryObserver changeSoureDirectoryObserver = new ChangeSoureDirectoryObserver();
         changeSoureDirectoryObserver.getObservedList().add(model);
-        VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver, statusObserver, changeSoureDirectoryObserver);
+        VBox leftPanel = createLeftPanel(
+                primaryStage, changeDestinationDirectoryObserver, statusObserver, changeSoureDirectoryObserver, changeDestinationDirectoryModelObserver
+        );
 
         ChangeModelCurrentFileObserver changeModelCurrentFileObserver = new ChangeModelCurrentFileObserver();
         model.setChangeModelCurrentFileObservable(changeModelCurrentFileObserver);
         root.getChildren().add(leftPanel);
         root.getChildren().add(
-                createRightPanel(changeDestinationDirectoryObserver, changeSoureDirectoryObserver, changeModelCurrentFileObserver)
+                createRightPanel(
+                        changeDestinationDirectoryModelObserver,
+                        changeSoureDirectoryObserver,
+                        changeModelCurrentFileObserver
+                )
         );
 
 
@@ -62,7 +69,7 @@ public class App extends Application {
     }
 
     private VBox createRightPanel(
-            ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver,
+            ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver,
             ChangeSoureDirectoryObserver changeSoureDirectoryObserver,
             ChangeModelCurrentFileObserver changeModelCurrentFileObserver
     ) {
@@ -73,7 +80,7 @@ public class App extends Application {
         );
 
         rightPanel.getChildren().add(
-                createDestinationTextField(changeDestinationDirectoryObserver).getView()
+                createDestinationTextField(changeDestinationDirectoryModelObserver).getView()
         );
 
         DateTextField dateTextField = createDateTextField();
@@ -101,17 +108,18 @@ public class App extends Application {
         return sourceTextField;
     }
 
-    private DestinationTextField createDestinationTextField(ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
+    private DestinationTextField createDestinationTextField(ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver) {
         DestinationTextField destinationTextField = new DestinationTextField();
-        destinationTextField.changeDestinationDirectory(model.getDestinationDirectory());
-        changeDestinationDirectoryObserver.getObservedList().add(destinationTextField);
+        destinationTextField.changeDestinationDirectory(model.getDestinationDirectory().toString());
+        changeDestinationDirectoryModelObserver.getObservableList().add(destinationTextField);
         return destinationTextField;
     }
 
     private VBox createLeftPanel(
             Stage primaryStage,
             ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver,
-            StatusObserver statusObserver, ChangeSoureDirectoryObserver changeSoureDirectoryObserver
+            StatusObserver statusObserver, ChangeSoureDirectoryObserver changeSoureDirectoryObserver,
+            ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver
     ) {
         VBox leftPanel = new VBox();
 
@@ -121,13 +129,14 @@ public class App extends Application {
         );
 
         DestinationDirectoryChooser destinationDirectoryChooser = createDestinationDirectoryChooser(primaryStage, changeDestinationDirectoryObserver);
-        model.setChangeDestinatonDirectoryObserver(changeDestinationDirectoryObserver);
+        model.setChangeDestinationDirectoryModelObserver(changeDestinationDirectoryModelObserver);
         leftPanel.getChildren().add(
                 destinationDirectoryChooser.getView()
         );
 
         FileTreeView fileTreeView = new FileTreeView();
         fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
+        changeDestinationDirectoryModelObserver.getObservableList().add(fileTreeView);
         fileTreeView.init(
                 getName(model.getSourceDirectory()),
                 model.getPathContainerList()

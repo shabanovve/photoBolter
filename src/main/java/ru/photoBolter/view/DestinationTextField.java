@@ -2,11 +2,9 @@ package ru.photoBolter.view;
 
 import javafx.scene.control.TextField;
 import ru.photoBolter.Constants;
-import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
+import ru.photoBolter.controller.observable.ChangeDestinationDirectoryModelObservable;
 
-import java.nio.file.Path;
-
-public class DestinationTextField implements ChangeDestinationDirectoryObservable {
+public class DestinationTextField implements ChangeDestinationDirectoryModelObservable {
     private final TextField textField = new TextField("text");
 
     {
@@ -14,8 +12,8 @@ public class DestinationTextField implements ChangeDestinationDirectoryObservabl
     }
 
     @Override
-    public void changeDestinationDirectory(Path path) {
-            textField.setText("Destination directory: " + path.toString());
+    public void changeDestinationDirectory(String destinationDirectory) {
+        textField.setText("Destination directory: " + destinationDirectory);
     }
 
     public TextField getView() {
