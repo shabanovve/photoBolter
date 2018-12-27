@@ -3,7 +3,7 @@ package ru.photoBolter.view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
-import ru.photoBolter.controller.ChangeDestinationDirectoryObserver;
+import ru.photoBolter.controller.observer.ChangeDestinationDirectoryObserver;
 
 import java.io.File;
 import java.nio.file.Path;

@@ -7,7 +7,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import ru.photoBolter.controller.ChangeCurrentFileObserver;
+import ru.photoBolter.controller.observer.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
 import ru.photoBolter.controller.observable.ChangeFileTreeObservable;
 import ru.photoBolter.controller.observable.StatusObserverable;

@@ -1,9 +1,11 @@
 package ru.photoBolter.model;
 
-import ru.photoBolter.controller.*;
 import ru.photoBolter.controller.observable.ChangeCurrentFileObservable;
 import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
 import ru.photoBolter.controller.observable.ChangeSourceDirectoryObservable;
+import ru.photoBolter.controller.observer.ChangeDestinationDirectoryObserver;
+import ru.photoBolter.controller.observer.ChangeFileTreeObserver;
+import ru.photoBolter.controller.observer.ChangeModelCurrentFileObserver;
 import ru.photoBolter.util.FilePathHelper;
 
 import java.nio.file.Path;

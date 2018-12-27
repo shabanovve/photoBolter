@@ -1,4 +1,4 @@
-package ru.photoBolter.controller;
+package ru.photoBolter.controller.observer;
 
 
 import javafx.event.EventHandler;
