@@ -48,26 +48,11 @@ public class App extends Application {
 
         makeMaximizedWindow(primaryStage);
 
-        primaryStage.addEventHandler(KeyEvent.ANY, keyEvent -> {
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                boolean notDirectory = !model.getCurrentFile().toFile().isDirectory();
-                if (notDirectory) {
-                    try {
-                        fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
-                    } catch (CopyFileExeption e) {
-                        logger.warning("CopyFileExeption!");
-                    }
-                    PathContainer pathContainer = FilePathHelper.getPathContainer(
-                            model.getCurrentFile(),
-                            model.getPathContainerList()
-                    );
-                    boolean copied = checkCopy(model.getCurrentFile(), model.getDestinationDirectory());
-                    pathContainer.setStatus(copied ? FileStatus.COPIED : FileStatus.FILE);
-                    statusObserver.changeStatus(pathContainer);
-                }
-                logger.info("Pressed " + keyEvent.getCode().getName());
-            }
-        });
+        primaryStage.addEventHandler(KeyEvent.ANY, new PressEnterHandler(
+                model,
+                statusObserver,
+                fileService
+        ));
 
         primaryStage.show();
     }

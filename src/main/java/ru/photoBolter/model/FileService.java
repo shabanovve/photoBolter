@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.toList;
-import static ru.photoBolter.model.FileStatus.COPIED;
-import static ru.photoBolter.model.FileStatus.FILE;
-import static ru.photoBolter.model.FileStatus.FOLDER;
+import static ru.photoBolter.model.FileStatus.*;
 import static ru.photoBolter.util.FilePathHelper.getDestinationPath;
 
 
@@ -74,14 +72,9 @@ public class FileService {
                                         e.getMessage()
                                 )
                         );
-                        //todo set status WRONG
                     }
 
-                    if (copied) {
-                        pathContainer.setStatus(COPIED);
-                    } else {
-                        pathContainer.setStatus(FILE);
-                    }
+                    pathContainer.setStatus(copied ? COPIED : WRONG);
                 }
         );
 
