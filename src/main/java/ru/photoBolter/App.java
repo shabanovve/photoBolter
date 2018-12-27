@@ -37,7 +37,7 @@ public class App extends Application {
         ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver = new ChangeDestinationDirectoryObserver();
         changeDestinationDirectoryObserver.getObservedList().add(model);
         ChangeSoureDirectoryObserver changeSoureDirectoryObserver = new ChangeSoureDirectoryObserver();
-        changeDestinationDirectoryObserver.getObservedList().add(model);
+        changeSoureDirectoryObserver.getObservedList().add(model);
         VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver, statusObserver, changeSoureDirectoryObserver);
 
         root.getChildren().add(leftPanel);
@@ -84,7 +84,7 @@ public class App extends Application {
     private SourceTextField createSourceTextField(ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {
         SourceTextField sourceTextField = new SourceTextField();
         sourceTextField.changeSourceDirectory(model.getSourceDirectory());
-        changeSoureDirectoryObserver.getObserved().add(sourceTextField);
+        changeSoureDirectoryObserver.getObservedList().add(sourceTextField);
         return sourceTextField;
     }
 

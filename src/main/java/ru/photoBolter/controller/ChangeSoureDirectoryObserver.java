@@ -8,7 +8,7 @@ public class ChangeSoureDirectoryObserver extends AbstractChangeDirectoryObserve
 
     private final List<ChangeSourceDirectoryObservable> observed = new ArrayList<>();
 
-    public List<ChangeSourceDirectoryObservable> getObserved() {
+    public List<ChangeSourceDirectoryObservable> getObservedList() {
         return observed;
     }
 
