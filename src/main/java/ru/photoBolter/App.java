@@ -3,6 +3,7 @@ package ru.photoBolter;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -71,6 +72,10 @@ public class App extends Application {
                 createDestinationTextField(changeDestinationDirectoryObserver).getView()
         );
 
+        rightPanel.getChildren().add(
+                createDateTextField()
+        );
+
         PhotoView photoView = new PhotoView();
         model.setChangeCurrentFileObserver(
                 new ChangeCurrentFileObserver(photoView)
@@ -79,6 +84,10 @@ public class App extends Application {
                 photoView.getView()
         );
         return rightPanel;
+    }
+
+    private TextField createDateTextField() {
+        return new DateTextField().getView();
     }
 
     private SourceTextField createSourceTextField(ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {
