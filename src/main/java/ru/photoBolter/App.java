@@ -36,10 +36,12 @@ public class App extends Application {
         StatusObserver statusObserver = new StatusObserver();
         ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver = new ChangeDestinationDirectoryObserver();
         changeDestinationDirectoryObserver.getObservedList().add(model);
-        VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver, statusObserver);
+        ChangeSoureDirectoryObserver changeSoureDirectoryObserver = new ChangeSoureDirectoryObserver();
+        changeDestinationDirectoryObserver.getObservedList().add(model);
+        VBox leftPanel = createLeftPanel(primaryStage, changeDestinationDirectoryObserver, statusObserver, changeSoureDirectoryObserver);
 
         root.getChildren().add(leftPanel);
-        root.getChildren().add(createRightPanel(changeDestinationDirectoryObserver));
+        root.getChildren().add(createRightPanel(changeDestinationDirectoryObserver, changeSoureDirectoryObserver));
 
 
         primaryStage.setScene(new Scene(root));
@@ -55,8 +57,15 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private VBox createRightPanel(ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
+    private VBox createRightPanel(
+            ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver,
+            ChangeSoureDirectoryObserver changeSoureDirectoryObserver
+    ) {
         VBox rightPanel = new VBox();
+
+        rightPanel.getChildren().add(
+                createSourceTextField(changeSoureDirectoryObserver).getView()
+        );
 
         rightPanel.getChildren().add(
                 createDestinationTextField(changeDestinationDirectoryObserver).getView()
@@ -72,6 +81,13 @@ public class App extends Application {
         return rightPanel;
     }
 
+    private SourceTextField createSourceTextField(ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {
+        SourceTextField sourceTextField = new SourceTextField();
+        sourceTextField.changeSourceDirectory(model.getSourceDirectory());
+        changeSoureDirectoryObserver.getObserved().add(sourceTextField);
+        return sourceTextField;
+    }
+
     private DestinationTextField createDestinationTextField(ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver) {
         DestinationTextField destinationTextField = new DestinationTextField();
         destinationTextField.changeDestinationDirectory(model.getDestinationDirectory());
@@ -79,10 +95,14 @@ public class App extends Application {
         return destinationTextField;
     }
 
-    private VBox createLeftPanel(Stage primaryStage, ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver, StatusObserver statusObserver) {
+    private VBox createLeftPanel(
+            Stage primaryStage,
+            ChangeDestinationDirectoryObserver changeDestinationDirectoryObserver,
+            StatusObserver statusObserver, ChangeSoureDirectoryObserver changeSoureDirectoryObserver
+    ) {
         VBox leftPanel = new VBox();
 
-        SourceDirectoryChooser sourceDirectoryChooser = createSourceDirectoryChooser(primaryStage);
+        SourceDirectoryChooser sourceDirectoryChooser = createSourceDirectoryChooser(primaryStage, changeSoureDirectoryObserver);
         leftPanel.getChildren().add(
                 sourceDirectoryChooser.getView()
         );
@@ -123,10 +143,10 @@ public class App extends Application {
         return destinationDirectoryChooser;
     }
 
-    private SourceDirectoryChooser createSourceDirectoryChooser(Stage primaryStage) {
+    private SourceDirectoryChooser createSourceDirectoryChooser(Stage primaryStage, ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {
         SourceDirectoryChooser sourceDirectoryChooser = new SourceDirectoryChooser();
         sourceDirectoryChooser.setStage(primaryStage);
-        sourceDirectoryChooser.setObserver(new ChangeSoureDirectoryObserver(model));
+        sourceDirectoryChooser.setObserver(changeSoureDirectoryObserver);
         sourceDirectoryChooser.setInitialDirectory(model.getSourceDirectory().toFile());
         return sourceDirectoryChooser;
     }
