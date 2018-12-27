@@ -8,31 +8,34 @@ import ru.photoBolter.util.FilePathHelper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.toList;
 import static ru.photoBolter.model.FileStatus.*;
-import static ru.photoBolter.util.FilePathHelper.getDestinationPath;
+import static ru.photoBolter.util.FilePathHelper.createSufix;
+import static ru.photoBolter.util.FilePathHelper.getName;
 
 
 public class FileService {
     private Logger logger = Logger.getLogger(FileService.class.getName());
 
-    public void copyFile(Path source, Path destinationDirectory) {
+    public void copyFile(PathContainer pathContainer, Path destinationDirectory) {
         try {
-            Path destination = null;
-            try {
-                destination = getDestinationPath(source, destinationDirectory);
-            } catch (RuntimeException e) {
-                throw new CopyFileExeption(e);
-            }
+            Path destination = Paths.get(
+                    destinationDirectory
+                            .toString()
+                            .concat(pathContainer.getSufix())
+            );
+
             if (!destination.toFile().exists()) {
                 destination.toFile().mkdirs();
             }
             Files.copy(
-                    source,
+                    pathContainer.getPath(),
                     destination,
                     StandardCopyOption.REPLACE_EXISTING
             );
@@ -63,7 +66,7 @@ public class FileService {
 
             boolean copied = false;
             try {
-                copied = FilePathHelper.checkCopy(path, destinationDirectory);
+                copied = FilePathHelper.checkCopy(pathContainer, destinationDirectory);
             } catch (MetadataException e) {
                 logger.warning(
                         String.format(
@@ -77,6 +80,35 @@ public class FileService {
             }
 
             pathContainer.setStatus(copied ? COPIED : FILE);
+        }
+
+    }
+
+    public void defineCreateDate(List<PathContainer> fileList) {
+        for (PathContainer pathContainer : fileList) {
+
+            LocalDate localDateFromMetadata = null;
+            try {
+                localDateFromMetadata = FilePathHelper.getLocalDateFromMetadata(pathContainer.getPath());
+                pathContainer.setCreateDate(localDateFromMetadata);
+            } catch (MetadataException e) {
+                logger.warning("MetadataException!");
+            }
+        }
+
+    }
+
+    public void defineSufix(List<PathContainer> fileList) {
+        for (PathContainer pathContainer : fileList) {
+            if (pathContainer.getCreateDate() == null) {
+                continue;
+            }
+            pathContainer.setSufix(
+                    createSufix(
+                            pathContainer.getCreateDate(),
+                            getName(pathContainer.getPath())
+                    )
+            );
         }
 
     }

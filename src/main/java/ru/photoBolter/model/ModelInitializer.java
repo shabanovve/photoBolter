@@ -22,6 +22,8 @@ public class ModelInitializer {
         initPaths(model);
 
         List<PathContainer> fileList = fileService.createFileList(model.getSourceDirectory());
+        fileService.defineCreateDate(fileList);
+        fileService.defineSufix(fileList);
         fileService.defineStatus(fileList, model.getDestinationDirectory());
         model.setPathContainerList(fileList);
 

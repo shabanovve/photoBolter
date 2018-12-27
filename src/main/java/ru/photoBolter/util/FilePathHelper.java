@@ -21,8 +21,7 @@ import java.util.Locale;
 
 public class FilePathHelper {
 
-    public static String getSufix(Path source) {
-        LocalDate localDate = getLocalDateFromMetadata(source);
+    public static String createSufix(LocalDate localDate, String fileName) {
 
         int year = Year.from(localDate).getValue();
         int monthNumber = YearMonth.from(localDate).getMonth().getValue();
@@ -37,7 +36,7 @@ public class FilePathHelper {
                 .append("/").toString();
 
         validate(year, monthNumber, dayOfMonthInt);
-        return "/" + datePath + source.getName(source.getNameCount() - 1);
+        return "/" + datePath + fileName;
     }
 
     private static void validate(int year, int mouthNumber, int dayOfMonthInt) {
@@ -54,7 +53,7 @@ public class FilePathHelper {
         }
     }
 
-    private static LocalDate getLocalDateFromMetadata(Path source) {
+    public static LocalDate getLocalDateFromMetadata(Path source) {
         Metadata metadata;
         try {
             metadata = ImageMetadataReader.readMetadata(Files.newInputStream(source));
@@ -69,15 +68,22 @@ public class FilePathHelper {
                 .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    public static boolean checkCopy(Path currentFile, Path destinationDirectory) {
-        if (currentFile.toFile().isDirectory()) {
+    public static boolean checkCopy(PathContainer currentFile, Path destinationDirectory) {
+        if (currentFile.getPath().toFile().isDirectory()) {
             return false;
         }
 
-        if (!isItJpgFile(currentFile)) {
+        if (!isItJpgFile(currentFile.getPath())) {
             return false;
         }
-        return Files.exists(getDestinationPath(currentFile, destinationDirectory));
+        LocalDate localDateFromMetadata = getLocalDateFromMetadata(currentFile.getPath());
+        return Files.exists(
+                getDestinationPath(
+                        localDateFromMetadata,
+                        getName(currentFile.getPath()),
+                        destinationDirectory
+                )
+        );
     }
 
     private static boolean isItJpgFile(Path file) {
@@ -88,8 +94,10 @@ public class FilePathHelper {
                 .contains(".jpg");
     }
 
-    public static Path getDestinationPath(Path source, Path destinationDirectory) {
-        return Paths.get(destinationDirectory.toString() + getSufix(source));
+    public static Path getDestinationPath(LocalDate createDate, String fileName, Path destinationDirectory) {
+        return Paths.get(
+                destinationDirectory.toString() + createSufix(createDate, fileName)
+        );
     }
 
     public static String getName(Path path) {
