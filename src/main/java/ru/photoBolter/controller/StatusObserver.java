@@ -1,6 +1,6 @@
 package ru.photoBolter.controller;
 
-import java.nio.file.Path;
+import ru.photoBolter.model.PathContainer;
 
 public class StatusObserver {
 
@@ -10,7 +10,7 @@ public class StatusObserver {
         this.statusObserverable = statusObserverable;
     }
 
-    public void changeStatus(Path path, boolean copied) {
-        statusObserverable.changeStatus(path, copied);
+    public void changeStatus(PathContainer pathContainer) {
+        statusObserverable.changeStatus(pathContainer);
     }
 }

@@ -6,7 +6,9 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import ru.photoBolter.exception.MetadataException;
+import ru.photoBolter.exception.NoSuchPathContainerException;
 import ru.photoBolter.exception.ValidateDateException;
+import ru.photoBolter.model.PathContainer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.*;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 
 public class FilePathHelper {
@@ -93,6 +96,13 @@ public class FilePathHelper {
         return path
                 .getName(path.getNameCount() - 1)
                 .toString();
+    }
+
+    public static PathContainer getPathContainer(Path currentFile, List<PathContainer> pathContainers) {
+        return pathContainers.stream()
+                .filter(pathContainer -> pathContainer.getPath().equals(currentFile))
+                .findFirst()
+                .orElseThrow(NoSuchPathContainerException::new);
     }
 
 }

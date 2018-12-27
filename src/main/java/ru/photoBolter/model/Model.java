@@ -40,10 +40,6 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         this.propertiesSaver = propertiesSaver;
     }
 
-    public void setChangeSoureDirectoryObserver(ChangeSoureDirectoryObserver changeSoureDirectoryObserver) {
-        this.changeSoureDirectoryObserver = changeSoureDirectoryObserver;
-    }
-
     public void setChangeDestinatonDirectoryObserver(ChangeDestinationDirectoryObserver changeDestinatonDirectoryObserver) {
         this.changeDestinatonDirectoryObserver = changeDestinatonDirectoryObserver;
     }
@@ -66,8 +62,6 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         return currentFile;
     }
 
-    private ChangeSoureDirectoryObserver changeSoureDirectoryObserver;
-
     public Path getSourceDirectory() {
         return this.sourceDirectory;
     }
@@ -83,6 +77,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         }
         this.sourceDirectory = path;
         pathContainerList = fileService.createFileList(sourceDirectory);
+        fileService.defineStatus(pathContainerList, destinationDirectory);
         changeFileTreeObserver.changeFileTree(getName(this.sourceDirectory), this.pathContainerList);
         if (propertiesSaver != null) {
             propertiesSaver.save(this);

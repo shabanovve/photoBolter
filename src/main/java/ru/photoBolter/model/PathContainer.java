@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 public class PathContainer {
     private final Path path;
-    private boolean copied;
+    private FileStatus status;
 
     public PathContainer(Path path) {
         this.path = path;
@@ -14,12 +14,12 @@ public class PathContainer {
         return path;
     }
 
-    public boolean isCopied() {
-        return copied;
+    public FileStatus getStatus() {
+        return status;
     }
 
-    public void setCopied(boolean copied) {
-        this.copied = copied;
+    public void setStatus(FileStatus status) {
+        this.status = status;
     }
 
     @Override

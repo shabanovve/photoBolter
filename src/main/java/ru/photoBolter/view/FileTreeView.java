@@ -11,9 +11,9 @@ import ru.photoBolter.controller.ChangeCurrentFileObserver;
 import ru.photoBolter.controller.ChangeDestinationDirectoryObservable;
 import ru.photoBolter.controller.ChangeFileTreeObservable;
 import ru.photoBolter.controller.StatusObserverable;
+import ru.photoBolter.exception.UnknownStatusException;
 import ru.photoBolter.model.PathContainer;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
@@ -29,7 +29,6 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
 
     private TreeView<PathContainer> tree;
     private ChangeCurrentFileObserver changeCurrentFileObserver;
-    private Path destination;
 
     public FileTreeView() {
         tree = new TreeView();
@@ -49,10 +48,6 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
         this.changeCurrentFileObserver = changeCurrentFileObserver;
     }
 
-    public void setDestination(Path destination) {
-        this.destination = destination;
-    }
-
 
     @Override
     public void changeFileTree(String sourceDirectoryName, List<PathContainer> pathContainers) {
@@ -64,11 +59,12 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
                 sourceDirectoryName,
                 folderIcon
         );
+        rootItem.setExpanded(true);
 
         List<TreeItem> treeItems = pathContainers.stream()
                 .map(pathContainer -> new TreeItem(
                         pathContainer,
-                        getIcon(pathContainer.getPath()))
+                        getIcon(pathContainer))
                 )
                 .collect(toList());
 
@@ -81,49 +77,57 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
         tree.refresh();
     }
 
-    private ImageView getIcon(Path filePath) {
-        if (Files.isDirectory(filePath)) {
-            return new ImageView(
-                    new Image(getClass().getResourceAsStream("/folder.png"))
-            );
-        } else {
-            return new ImageView(
-                    new Image(getClass().getResourceAsStream("/file.png"))
-            );
+    private ImageView getIcon(PathContainer pathContainer) {
+        String iconFileName;
+        switch (pathContainer.getStatus()) {
+            case FILE: {
+                iconFileName = "/file.png";
+                break;
+            }
+            case FOLDER: {
+                iconFileName = "/folder.png";
+                break;
+            }
+            case COPIED: {
+                iconFileName = "/true.png";
+                break;
+            }
+            case WRONG: {
+                iconFileName = "/warning.png";
+                break;
+            }
+            default: {
+                throw new UnknownStatusException();
+            }
         }
+        return new ImageView(
+                new Image(
+                        getClass()
+                                .getResourceAsStream(
+                                        iconFileName
+                                )
+                )
+        );
     }
 
     @Override
-    public void changeStatus(Path path, boolean copied) {
+    public void changeStatus(PathContainer pathContainer) {
         TreeItem<PathContainer> treeElement = rootItem.getChildren()
                 .stream()
-                .filter(item -> item.getValue().getPath().equals(path))
+                .filter(item -> item.getValue().getPath().equals(pathContainer.getPath()))
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
-        treeElement.setGraphic(getIcon(path, copied));
+        treeElement.setGraphic(getIcon(pathContainer));
     }
 
-    private ImageView getIcon(Path path, boolean copied) {
-        if (copied) {
-            return new ImageView(
-                    new Image(getClass().getResourceAsStream("/true.png"))
-            );
-        } else {
-            return getIcon(path);
-        }
-    }
 
     @Override
     public void changeDestinationDirectory(Path path) {
-        this.destination = path;
-
         rootItem.getChildren().forEach(treeElement -> {
-            treeElement.setGraphic(
-                    getIcon(
-                            path,
-                            false
-                    )
-            );
-        });
+                    treeElement.setGraphic(
+                            getIcon(treeElement.getValue())
+                    );
+                }
+        );
     }
 }

@@ -1,11 +1,11 @@
 package ru.photoBolter.model;
 
 import ru.photoBolter.exception.NoConfigException;
-import ru.photoBolter.util.FilePathHelper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class ModelInitializer {
@@ -21,16 +21,10 @@ public class ModelInitializer {
 
         initPaths(model);
 
-        model.setPathContainerList(
-                fileService.createFileList(model.getSourceDirectory())
-        );
+        List<PathContainer> fileList = fileService.createFileList(model.getSourceDirectory());
+        fileService.defineStatus(fileList, model.getDestinationDirectory());
+        model.setPathContainerList(fileList);
 
-        model.getPathContainerList().forEach(pathContainer -> {
-                    pathContainer.setCopied(
-                            FilePathHelper.checkCopy(pathContainer.getPath(), model.getDestinationDirectory())
-                    );
-                }
-        );
     }
 
     private static void initPaths(Model model) {

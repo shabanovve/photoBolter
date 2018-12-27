@@ -10,14 +10,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.photoBolter.controller.*;
-import ru.photoBolter.model.FileService;
-import ru.photoBolter.model.Model;
-import ru.photoBolter.model.ModelInitializer;
+import ru.photoBolter.exception.CopyFileExeption;
+import ru.photoBolter.model.*;
 import ru.photoBolter.util.FilePathHelper;
 import ru.photoBolter.view.*;
 
 import java.util.logging.Logger;
 
+import static ru.photoBolter.util.FilePathHelper.checkCopy;
 import static ru.photoBolter.util.FilePathHelper.getName;
 
 public class App extends Application {
@@ -52,9 +52,18 @@ public class App extends Application {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                 boolean notDirectory = !model.getCurrentFile().toFile().isDirectory();
                 if (notDirectory) {
-                    fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
-                    boolean copied = FilePathHelper.checkCopy(model.getCurrentFile(), model.getDestinationDirectory());
-                    statusObserver.changeStatus(model.getCurrentFile(), copied);
+                    try {
+                        fileService.copyFile(model.getCurrentFile(), model.getDestinationDirectory());
+                    } catch (CopyFileExeption e) {
+                        logger.warning("CopyFileExeption!");
+                    }
+                    PathContainer pathContainer = FilePathHelper.getPathContainer(
+                            model.getCurrentFile(),
+                            model.getPathContainerList()
+                    );
+                    boolean copied = checkCopy(model.getCurrentFile(), model.getDestinationDirectory());
+                    pathContainer.setStatus(copied ? FileStatus.COPIED : FileStatus.FILE);
+                    statusObserver.changeStatus(pathContainer);
                 }
                 logger.info("Pressed " + keyEvent.getCode().getName());
             }
@@ -103,7 +112,6 @@ public class App extends Application {
 
         FileTreeView fileTreeView = new FileTreeView();
         fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
-        fileTreeView.setDestination(model.getDestinationDirectory());
         fileTreeView.init(
                 getName(model.getSourceDirectory()),
                 model.getPathContainerList()
@@ -114,9 +122,6 @@ public class App extends Application {
 
         statusObserver.setStatusObserverable(fileTreeView);
 
-        model.setChangeSoureDirectoryObserver(
-                new ChangeSoureDirectoryObserver(sourceDirectoryChooser)
-        );
         model.setChangeFileTreeObserver(new ChangeFileTreeObserver(fileTreeView));
 
         leftPanel.getChildren().add(

@@ -1,8 +1,8 @@
 package ru.photoBolter.controller;
 
-import java.nio.file.Path;
+import ru.photoBolter.model.PathContainer;
 
 public interface StatusObserverable {
 
-    void changeStatus(Path path, boolean copied);
+    void changeStatus(PathContainer pathContainer);
 }
