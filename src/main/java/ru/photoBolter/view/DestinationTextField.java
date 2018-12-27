@@ -2,7 +2,7 @@ package ru.photoBolter.view;
 
 import javafx.scene.control.TextField;
 import ru.photoBolter.Constants;
-import ru.photoBolter.controller.ChangeDestinationDirectoryObservable;
+import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
 
 import java.nio.file.Path;
 

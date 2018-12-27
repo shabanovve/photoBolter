@@ -2,7 +2,7 @@ package ru.photoBolter.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import ru.photoBolter.controller.ChangeSourceDirectoryObservable;
+import ru.photoBolter.controller.observable.ChangeSourceDirectoryObservable;
 import ru.photoBolter.controller.ChangeSoureDirectoryObserver;
 
 import java.io.File;

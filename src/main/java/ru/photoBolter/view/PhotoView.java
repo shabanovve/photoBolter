@@ -2,7 +2,7 @@ package ru.photoBolter.view;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import ru.photoBolter.controller.ChangeModelCurrentFileObservable;
+import ru.photoBolter.controller.observable.ChangeModelCurrentFileObservable;
 import ru.photoBolter.model.PathContainer;
 
 import java.nio.file.Path;

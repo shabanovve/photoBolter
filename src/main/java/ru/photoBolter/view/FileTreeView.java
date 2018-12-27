@@ -8,9 +8,9 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.photoBolter.controller.ChangeCurrentFileObserver;
-import ru.photoBolter.controller.ChangeDestinationDirectoryObservable;
-import ru.photoBolter.controller.ChangeFileTreeObservable;
-import ru.photoBolter.controller.StatusObserverable;
+import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
+import ru.photoBolter.controller.observable.ChangeFileTreeObservable;
+import ru.photoBolter.controller.observable.StatusObserverable;
 import ru.photoBolter.exception.UnknownStatusException;
 import ru.photoBolter.model.PathContainer;
 

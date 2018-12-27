@@ -1,4 +1,4 @@
-package ru.photoBolter.controller;
+package ru.photoBolter.controller.observable;
 
 import ru.photoBolter.model.PathContainer;
 

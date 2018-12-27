@@ -1,5 +1,6 @@
 package ru.photoBolter.controller;
 
+import ru.photoBolter.controller.observable.ChangeFileTreeObservable;
 import ru.photoBolter.model.PathContainer;
 
 import java.util.List;

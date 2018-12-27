@@ -1,5 +1,7 @@
 package ru.photoBolter.controller;
 
+import ru.photoBolter.controller.observable.ChangeDestinationDirectoryObservable;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

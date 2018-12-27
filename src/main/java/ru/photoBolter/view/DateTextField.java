@@ -2,7 +2,7 @@ package ru.photoBolter.view;
 
 import javafx.scene.control.TextField;
 import ru.photoBolter.Constants;
-import ru.photoBolter.controller.ChangeModelCurrentFileObservable;
+import ru.photoBolter.controller.observable.ChangeModelCurrentFileObservable;
 import ru.photoBolter.model.PathContainer;
 
 public class DateTextField implements ChangeModelCurrentFileObservable {

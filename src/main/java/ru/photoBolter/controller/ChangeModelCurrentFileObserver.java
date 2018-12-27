@@ -1,5 +1,6 @@
 package ru.photoBolter.controller;
 
+import ru.photoBolter.controller.observable.ChangeModelCurrentFileObservable;
 import ru.photoBolter.model.PathContainer;
 
 import java.util.ArrayList;

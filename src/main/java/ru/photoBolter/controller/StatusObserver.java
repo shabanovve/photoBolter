@@ -1,5 +1,6 @@
 package ru.photoBolter.controller;
 
+import ru.photoBolter.controller.observable.StatusObserverable;
 import ru.photoBolter.model.PathContainer;
 
 public class StatusObserver {

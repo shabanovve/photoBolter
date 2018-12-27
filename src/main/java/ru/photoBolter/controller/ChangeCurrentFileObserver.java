@@ -1,5 +1,7 @@
 package ru.photoBolter.controller;
 
+import ru.photoBolter.controller.observable.ChangeCurrentFileObservable;
+
 import java.nio.file.Path;
 
 public class ChangeCurrentFileObserver {

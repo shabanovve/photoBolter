@@ -1,4 +1,4 @@
-package ru.photoBolter.controller;
+package ru.photoBolter.controller.observable;
 
 import java.nio.file.Path;
 
