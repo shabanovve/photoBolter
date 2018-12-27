@@ -3,21 +3,19 @@ package ru.photoBolter;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.photoBolter.controller.*;
-import ru.photoBolter.exception.CopyFileExeption;
-import ru.photoBolter.model.*;
-import ru.photoBolter.util.FilePathHelper;
+import ru.photoBolter.model.FileService;
+import ru.photoBolter.model.Model;
+import ru.photoBolter.model.ModelInitializer;
 import ru.photoBolter.view.*;
 
 import java.util.logging.Logger;
 
-import static ru.photoBolter.util.FilePathHelper.checkCopy;
 import static ru.photoBolter.util.FilePathHelper.getName;
 
 public class App extends Application {

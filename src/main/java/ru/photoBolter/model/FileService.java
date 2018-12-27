@@ -53,30 +53,31 @@ public class FileService {
     }
 
     public void defineStatus(List<PathContainer> pathContainers, Path destinationDirectory) {
-        pathContainers.forEach(pathContainer -> {
-                    Path path = pathContainer.getPath();
+        for (PathContainer pathContainer : pathContainers) {
+            Path path = pathContainer.getPath();
 
-                    if (path.toFile().isDirectory()) {
-                        pathContainer.setStatus(FOLDER);
-                        return;
-                    }
+            if (path.toFile().isDirectory()) {
+                pathContainer.setStatus(FOLDER);
+                continue;
+            }
 
-                    boolean copied = false;
-                    try {
-                        copied = FilePathHelper.checkCopy(path, destinationDirectory);
-                    } catch (MetadataException e) {
-                        logger.warning(
-                                String.format(
-                                        "Cannot check copy of the file %s. %s",
-                                        path.toString(),
-                                        e.getMessage()
-                                )
-                        );
-                    }
+            boolean copied = false;
+            try {
+                copied = FilePathHelper.checkCopy(path, destinationDirectory);
+            } catch (MetadataException e) {
+                logger.warning(
+                        String.format(
+                                "Cannot check copy of the file %s. %s",
+                                path.toString(),
+                                e.getMessage()
+                        )
+                );
+                pathContainer.setStatus(WRONG);
+                continue;
+            }
 
-                    pathContainer.setStatus(copied ? COPIED : WRONG);
-                }
-        );
+            pathContainer.setStatus(copied ? COPIED : FILE);
+        }
 
     }
 }
