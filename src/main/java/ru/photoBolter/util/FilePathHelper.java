@@ -5,9 +5,7 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
-import ru.photoBolter.exception.MetadataException;
-import ru.photoBolter.exception.NoSuchPathContainerException;
-import ru.photoBolter.exception.ValidateDateException;
+import ru.photoBolter.exception.*;
 import ru.photoBolter.model.PathContainer;
 
 import java.io.IOException;
@@ -16,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.*;
 import java.time.format.TextStyle;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,6 +53,10 @@ public class FilePathHelper {
     }
 
     public static LocalDate getLocalDateFromMetadata(Path source) {
+        if (!isItJpgFile(source)) {
+            return null;
+        }
+
         Metadata metadata;
         try {
             metadata = ImageMetadataReader.readMetadata(Files.newInputStream(source));
@@ -64,8 +67,14 @@ public class FilePathHelper {
         }
 
         Directory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-        return directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)
-                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (directory == null) {
+            throw new NoDirectoryInJpgException("File:" + source.toString());
+        }
+        Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+        if (date == null) {
+            throw new NoDateInJpgException("File:" + source.toString());
+        }
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public static boolean checkCopy(PathContainer currentFile, Path destinationDirectory) {
