@@ -137,10 +137,9 @@ public class App extends Application {
         FileTreeView fileTreeView = new FileTreeView();
         fileTreeView.setChangeCurrentFileObserver(new ChangeCurrentFileObserver(model));
         changeDestinationDirectoryModelObserver.getObservableList().add(fileTreeView);
-        fileTreeView.init(
-                getName(model.getSourceDirectory()),
-                model.getPathContainerList()
-        );
+        fileTreeView.setSourceDirectoryName(getName(model.getSourceDirectory()));
+        fileTreeView.setPathContainers(model.getPathContainerList());
+        fileTreeView.init();
         model.setFileService(fileService);
 
         statusObserver.setStatusObserverable(fileTreeView);

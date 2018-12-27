@@ -28,13 +28,17 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
 
     private TreeView<PathContainer> tree;
     private ChangeCurrentFileObserver changeCurrentFileObserver;
+    private String sourceDirectoryName;
+    private List<PathContainer> pathContainers;
 
     public FileTreeView() {
         tree = new TreeView();
         tree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<PathContainer>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<PathContainer>> observable, TreeItem<PathContainer> oldValue, TreeItem<PathContainer> newValue) {
-                changeCurrentFileObserver.changeCurrentFile(newValue.getValue().getPath());
+                if (newValue.getValue() != null) {
+                    changeCurrentFileObserver.changeCurrentFile(newValue.getValue().getPath());
+                }
             }
         });
     }
@@ -47,13 +51,22 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
         this.changeCurrentFileObserver = changeCurrentFileObserver;
     }
 
+    public void setSourceDirectoryName(String sourceDirectoryName) {
+        this.sourceDirectoryName = sourceDirectoryName;
+    }
+
+    public void setPathContainers(List<PathContainer> pathContainers) {
+        this.pathContainers = pathContainers;
+    }
 
     @Override
     public void changeFileTree(String sourceDirectoryName, List<PathContainer> pathContainers) {
-        init(sourceDirectoryName, pathContainers);
+        this.sourceDirectoryName = sourceDirectoryName;
+        this.pathContainers = pathContainers;
+        init();
     }
 
-    public void init(String sourceDirectoryName, List<PathContainer> pathContainers) {
+    public void init() {
         rootItem = new TreeItem(
                 sourceDirectoryName,
                 folderIcon
@@ -121,6 +134,6 @@ public class FileTreeView implements ChangeFileTreeObservable, StatusObserverabl
 
     @Override
     public void changeDestinationDirectory(String destinationDirectory) {
-        //todo make reinit
+        init();//reinit status of files
     }
 }

@@ -115,6 +115,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
             return;
         }
         this.destinationDirectory = path;
+        fileService.defineStatus(pathContainerList, destinationDirectory);
         changeDestinationDirectoryModelObserver.changeDestinationDirectory(this.destinationDirectory.toString());
         if (propertiesSaver != null) {
             propertiesSaver.save(this);
