@@ -8,7 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.*;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -85,19 +86,37 @@ public class FileService {
     public void defineCreateDate(List<PathContainer> fileList) {
         for (PathContainer pathContainer : fileList) {
 
-            LocalDate localDateFromMetadata = null;
+            LocalDate localDate = null;
             try {
-                localDateFromMetadata = FilePathHelper.getLocalDateFromMetadata(pathContainer.getPath());
-                pathContainer.setCreateDate(localDateFromMetadata);
+                localDate = FilePathHelper.getLocalDateFromMetadata(pathContainer.getPath());
+                if (localDate.getYear() < 1970) {
+                    localDate = corectYearWithFileAttribute(pathContainer, localDate);
+                }
+                FilePathHelper.validate(
+                        localDate.getYear(),
+                        localDate.getMonthValue(),
+                        localDate.getDayOfMonth()
+                );
+                pathContainer.setCreateDate(localDate);
             } catch (MetadataException e) {
                 logger.warning("MetadataException! " + pathContainer.getPath().toString());
             } catch (NoDirectoryInJpgException e) {
                 logger.warning(e.getMessage());
             } catch (NoDateInJpgException e) {
                 logger.warning(e.getMessage());
+            } catch (IOException e) {
+                logger.warning(e.getMessage());
             }
         }
 
+    }
+
+    private LocalDate corectYearWithFileAttribute(PathContainer pathContainer, LocalDate localDateFromMetadata) throws IOException {
+        BasicFileAttributes attr = Files.readAttributes(pathContainer.getPath(), BasicFileAttributes.class);
+        long millis = attr.creationTime().toMillis();
+        ZonedDateTime zonedDateTime = Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC"));
+        int year = zonedDateTime.getYear();
+        return LocalDate.of(year, localDateFromMetadata.getMonth(), localDateFromMetadata.getDayOfMonth());
     }
 
     public void defineSufix(List<PathContainer> fileList) {

@@ -34,11 +34,10 @@ public class FilePathHelper {
                 .append("/").append(year % 1000).append(monthNumberString).append(dayOfMonthString)
                 .append("/").toString();
 
-        validate(year, monthNumber, dayOfMonthInt);
         return "/" + datePath + fileName;
     }
 
-    private static void validate(int year, int mouthNumber, int dayOfMonthInt) {
+    public static void validate(int year, int mouthNumber, int dayOfMonthInt) {
         if (year < 1970) {
             throw new ValidateDateException("Wrong year = " + year);
         }
@@ -85,13 +84,8 @@ public class FilePathHelper {
         if (!isItJpgFile(currentFile.getPath())) {
             return false;
         }
-        LocalDate localDateFromMetadata = getLocalDateFromMetadata(currentFile.getPath());
         return Files.exists(
-                getDestinationPath(
-                        localDateFromMetadata,
-                        getName(currentFile.getPath()),
-                        destinationDirectory
-                )
+                Paths.get(destinationDirectory + currentFile.getSufix())
         );
     }
 
@@ -101,12 +95,6 @@ public class FilePathHelper {
                 .toString()
                 .toLowerCase()
                 .contains(".jpg");
-    }
-
-    public static Path getDestinationPath(LocalDate createDate, String fileName, Path destinationDirectory) {
-        return Paths.get(
-                destinationDirectory.toString() + createSufix(createDate, fileName)
-        );
     }
 
     public static String getName(Path path) {
