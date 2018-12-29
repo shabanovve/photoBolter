@@ -65,7 +65,7 @@ public class FileService {
             boolean copied = false;
             try {
                 copied = FilePathHelper.checkCopy(pathContainer, destinationDirectory);
-            } catch (MetadataException | NoDirectoryInJpgException | NoDateInJpgException e) {
+            } catch (MetadataException | NoDirectoryInJpgException | NoDateInJpgException | ValidateDateException e) {
                 logger.warning(
                         String.format(
                                 "Cannot check copy of the file %s. %s",
@@ -105,12 +105,23 @@ public class FileService {
             if (pathContainer.getCreateDate() == null) {
                 continue;
             }
-            pathContainer.setSufix(
-                    createSufix(
-                            pathContainer.getCreateDate(),
-                            getName(pathContainer.getPath())
-                    )
-            );
+            try {
+                pathContainer.setSufix(
+                        createSufix(
+                                pathContainer.getCreateDate(),
+                                getName(pathContainer.getPath())
+                        )
+                );
+            } catch (ValidateDateException e) {
+                logger.warning(
+                        String.format(
+                                "ValidateDateException! %s %s",
+                                e.getMessage(),
+                                pathContainer.getPath().toString()
+                        )
+                );
+                continue;
+            }
         }
 
     }
