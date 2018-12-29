@@ -24,6 +24,7 @@ public class FilePathHelper {
 
         int year = Year.from(localDate).getValue();
         int monthNumber = YearMonth.from(localDate).getMonth().getValue();
+        String yearString = year % 1000 < 10 ? "0" + year % 1000 : "" + year % 1000;
         String monthNumberString = monthNumber < 10 ? "0" + String.valueOf(monthNumber) : String.valueOf(monthNumber);
         String monthSymbols = YearMonth.from(localDate).getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toLowerCase();
         int dayOfMonthInt = MonthDay.from(localDate).getDayOfMonth();
@@ -31,7 +32,7 @@ public class FilePathHelper {
         String datePath = new StringBuffer().append(year)
                 .append("/").append(monthNumberString)
                 .append(monthSymbols)
-                .append("/").append(year % 1000).append(monthNumberString).append(dayOfMonthString)
+                .append("/").append(yearString).append(monthNumberString).append(dayOfMonthString)
                 .append("/").toString();
 
         return "/" + datePath + fileName;
@@ -89,7 +90,7 @@ public class FilePathHelper {
         );
     }
 
-    private static boolean isItJpgFile(Path file) {
+    public static boolean isItJpgFile(Path file) {
         return file
                 .getName(file.getNameCount() - 1)
                 .toString()

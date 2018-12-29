@@ -47,6 +47,7 @@ public class FileService {
         try {
             return Files.list(sourceDirectory)
                     .filter(path -> !path.toFile().isDirectory())
+                    .filter(path -> FilePathHelper.isItJpgFile(path))
                     .map(path -> new PathContainer(path))
                     .collect(toList());
         } catch (IOException e) {
@@ -89,7 +90,12 @@ public class FileService {
             LocalDate localDate = null;
             try {
                 localDate = FilePathHelper.getLocalDateFromMetadata(pathContainer.getPath());
-                if (localDate.getYear() < 1970) {
+
+                if (localDate == null) {
+                    throw new MetadataException(String.format("localDate == null. File:%s", pathContainer.getPath()));
+                }
+
+                if (localDate != null || localDate.getYear() < 1970) {
                     localDate = corectYearWithFileAttribute(pathContainer, localDate);
                 }
                 FilePathHelper.validate(
