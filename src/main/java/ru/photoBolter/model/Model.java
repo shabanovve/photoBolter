@@ -6,6 +6,7 @@ import ru.photoBolter.controller.observable.ChangeSourceDirectoryObservable;
 import ru.photoBolter.controller.observer.ChangeDestinationDirectoryModelObserver;
 import ru.photoBolter.controller.observer.ChangeFileTreeObserver;
 import ru.photoBolter.controller.observer.ChangeModelCurrentFileObserver;
+import ru.photoBolter.controller.observer.ChangeSourceDirectoryModelObserver;
 import ru.photoBolter.util.FilePathHelper;
 
 import java.nio.file.Path;
@@ -25,6 +26,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
     private List<PathContainer> pathContainerList;
     private ChangeModelCurrentFileObserver changeModelCurrentFileObserver ;
     private ChangeDestinationDirectoryModelObserver changeDestinationDirectoryModelObserver;
+    private ChangeSourceDirectoryModelObserver changeSourceDirectoryModelObserver;
 
     public void setPathContainerList(List<PathContainer> pathContainerList) {
         this.pathContainerList = pathContainerList;
@@ -54,6 +56,10 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         if (destinationDirectory != null) {
             this.destinationDirectory = destinationDirectory;
         }
+    }
+
+    public void setChangeSourceDirectoryModelObserver(ChangeSourceDirectoryModelObserver changeSourceDirectoryModelObserver) {
+        this.changeSourceDirectoryModelObserver = changeSourceDirectoryModelObserver;
     }
 
     public PathContainer getCurrentFile() {
@@ -87,6 +93,7 @@ public class Model implements ChangeSourceDirectoryObservable, ChangeCurrentFile
         fileService.defineSufix(pathContainerList);
         fileService.defineStatus(pathContainerList, destinationDirectory);
         changeFileTreeObserver.changeFileTree(getName(this.sourceDirectory), this.pathContainerList);
+        changeSourceDirectoryModelObserver.changeSourceDirectory(sourceDirectory);
         if (propertiesSaver != null) {
             propertiesSaver.save(this);
         }

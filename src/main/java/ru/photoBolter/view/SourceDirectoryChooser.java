@@ -2,13 +2,14 @@ package ru.photoBolter.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import ru.photoBolter.controller.observable.ChangeSourceDirectoryObservable;
+import ru.photoBolter.controller.observable.ChangeSourceDirectoryModelObservable;
 import ru.photoBolter.controller.observer.ChangeSoureDirectoryObserver;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class SourceDirectoryChooser extends AbstractDirectoryChooser implements ChangeSourceDirectoryObservable {
+public class SourceDirectoryChooser extends AbstractDirectoryChooser implements ChangeSourceDirectoryModelObservable {
 
     private ChangeSoureDirectoryObserver changeSoureDirectoryObserver;
 
@@ -28,7 +29,7 @@ public class SourceDirectoryChooser extends AbstractDirectoryChooser implements 
             public void handle(ActionEvent event) {
                 directoryChooser.setInitialDirectory(getInitialDirectory());
                 File directory = directoryChooser.showDialog(stage);
-                if (directory != null) {
+                if (directory != null && Files.exists(directory.toPath())) {
                     changeSoureDirectoryObserver.changeDirectory(directory.toPath());
                 }
             }
